@@ -3,6 +3,8 @@ package batalhanaval;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import enuns.TipoEstado;
+
 
 /**
  * Jogo de batalha naval.
@@ -23,15 +25,15 @@ public class Jogo implements Serializable {
     public static final int DIFICIL = 2;
 
     // Estados do jogo
-    public static final int POSICIONANDO_NAVIOS = 0;
-    public static final int VEZ_JOG1 = 1;
-    public static final int VEZ_JOG2 = 2;
-    public static final int TERMINADO = 3;
+    //public static final int POSICIONANDO_NAVIOS = 0;
+    //public static final int VEZ_JOG1 = 1;
+    //public static final int VEZ_JOG2 = 2;
+    //public static final int TERMINADO = 3;
 
     private Jogador[] jogadores;
 
     private int dificuldade;
-    private int estado;
+    private TipoEstado estado;
 
     // Fila de eventos
     private ArrayList<Evento> eventos;
@@ -45,13 +47,13 @@ public class Jogo implements Serializable {
 
         eventos = new ArrayList<Evento>();
 
-        setEstado(POSICIONANDO_NAVIOS);
+        setEstado(TipoEstado.POSICIONANDO_NAVIOS);
     }
 
-    public void setEstado(int estado) {
-        if (estado == POSICIONANDO_NAVIOS) {
+    public void setEstado(TipoEstado estado) {
+        if (estado == TipoEstado.POSICIONANDO_NAVIOS) {
             this.addEvento("Prepare-se! A batalha vai começar!");
-        } else if (estado == TERMINADO) {
+        } else if (estado == TipoEstado.TERMINADO) {
             if (this.getVencedor() == jogadores[0])
                 addEvento("A batalha terminou! Você foi derrotado!");
             else
@@ -74,12 +76,12 @@ public class Jogo implements Serializable {
         return dificuldade;
     }
 
-    public int getEstado() {
+    public TipoEstado getEstado() {
         return estado;
     }
 
     public Jogador getVencedor () {
-        if (this.estado != TERMINADO)
+        if (this.estado != TipoEstado.TERMINADO)
             return null;
 
         return this.jogadores[0].getFrotaRestante() == 0

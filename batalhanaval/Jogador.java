@@ -4,6 +4,7 @@ import java.awt.Point;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import enuns.TipoEstado;
 import batalhanaval.exceptions.PosicaoJaAtingidaException;
 
 /**
@@ -129,7 +130,7 @@ public class Jogador implements Serializable {
                 : "Você afundou o " + getNavio(id).getNome().toLowerCase() + " do adversário!" );
 		
 		if (frotaRestante == 0)
-			jogo.setEstado(Jogo.TERMINADO);
+			jogo.setEstado(TipoEstado.TERMINADO);
 	}
 
 	public Jogo getJogo() {

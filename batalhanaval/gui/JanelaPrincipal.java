@@ -29,6 +29,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.Timer;
 
+import enuns.TipoEstado;
 import enuns.TipoNavio;
 import batalhanaval.*;
 
@@ -83,15 +84,15 @@ public class JanelaPrincipal extends JFrame {
 
 		ActionListener fazJogada = new ActionListener() {
 			public void actionPerformed(ActionEvent evt) {
-				if (JanelaPrincipal.this.jogo.getEstado() == Jogo.VEZ_JOG2) {
+				if (JanelaPrincipal.this.jogo.getEstado() == TipoEstado.VEZ_JOG2) {
 					int res = JanelaPrincipal.this.jogo.getJogador(1).atira();
 					mapa1.repaint();
 
 					if (res == 1) {
 						temp.stop();
-						JanelaPrincipal.this.jogo.setEstado(Jogo.VEZ_JOG1);
+						JanelaPrincipal.this.jogo.setEstado(TipoEstado.VEZ_JOG1);
 					} else if (res > 1) {
-						if (JanelaPrincipal.this.jogo.getEstado() == Jogo.TERMINADO) {
+						if (JanelaPrincipal.this.jogo.getEstado() == TipoEstado.TERMINADO) {
 							temp.stop();
 							// mostraEvento("A batalha terminou! Você foi derrotado!");
 							mostraEventos();

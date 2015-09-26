@@ -13,9 +13,9 @@ import java.io.IOException;
 
 import javax.swing.JPanel;
 
+import enuns.TipoEstado;
 import batalhanaval.*;
 import batalhanaval.exceptions.PosicaoJaAtingidaException;
-
 
 @SuppressWarnings("serial")
 public class PainelGrade extends JPanel {
@@ -29,7 +29,7 @@ public class PainelGrade extends JPanel {
 
 	private int idNavioAtual;
 	private int orientacaoAtual;
-	private Point posicaoAtual;
+	public Point posicaoAtual;
 
 	private boolean mostrarNavios;
 
@@ -41,7 +41,7 @@ public class PainelGrade extends JPanel {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+
 		dim = new Dimension(jogador.getTabuleiro().getMapa().length
 				* DIM_QUADRADO, jogador.getTabuleiro().getMapa()[0].length
 				* DIM_QUADRADO);
@@ -62,7 +62,7 @@ public class PainelGrade extends JPanel {
 							+ "Para mudar a orientação, clique com o botão direito.");
 		}
 
-		TratadorMouse tm = new TratadorMouse();
+		TratadorMouse tm = new TratadorMouse(this,jogador);
 		addMouseListener(tm);
 		addMouseMotionListener(tm);
 
@@ -118,108 +118,69 @@ public class PainelGrade extends JPanel {
 		}
 	}
 
-	private class TratadorMouse implements MouseListener, MouseMotionListener {
-		PainelGrade painel = PainelGrade.this;
+	public void alteraOrientacaoNavio() {
+		int orientacaoAntiga = orientacaoAtual;
+		orientacaoAtual = (orientacaoAtual == Navio.VERTICAL ? Navio.HORIZONTAL
+				: Navio.VERTICAL);
 
-		@Override
-		public void mouseClicked(MouseEvent e) {
-			if (!(jogador instanceof Robo) // Jogador humano?
-					&& jogador.getJogo().getEstado() == Jogo.POSICIONANDO_NAVIOS) {
-				if ((e.getModifiers() & InputEvent.BUTTON3_MASK) == InputEvent.BUTTON3_MASK) { // Botão
-																								// direito?
-					int orientacaoAntiga = orientacaoAtual;
-					orientacaoAtual = (orientacaoAtual == Navio.VERTICAL ? Navio.HORIZONTAL
-							: Navio.VERTICAL);
+		jogador.getNavio(idNavioAtual).setOrientacao(orientacaoAtual);
 
-					jogador.getNavio(idNavioAtual).setOrientacao(
-							orientacaoAtual);
+		if (!jogador.getTabuleiro().cabeNavio(jogador.getNavio(idNavioAtual))) {
+			jogador.getNavio(idNavioAtual).setOrientacao(orientacaoAntiga);
+		}
 
-					if (!jogador.getTabuleiro().cabeNavio(
-							jogador.getNavio(idNavioAtual))) {
-						jogador.getNavio(idNavioAtual).setOrientacao(
-								orientacaoAntiga);
-					}
+		repaint();
+	}
 
-					painel.repaint();
-				} else if (idNavioAtual <= 32) { // Botão esquerdo?
-					try {
-						jogador.getTabuleiro().adicionaNavio(
-								jogador.getNavio(idNavioAtual));
-						if (idNavioAtual == 32) {
-							jogador.getJogo().setEstado(Jogo.VEZ_JOG1);
-						} else
-							idNavioAtual *= 2;
-					} catch (NullPointerException npe) {
-					}
-				}
-			} else if (jogador.getJogo().getEstado() == Jogo.VEZ_JOG1
-					&& (jogador instanceof Robo)) { // Jogo em andamento?
-				Point pos = painel.posicaoAtual;
-
-				try {
-					int res = jogador.getOponente().atira(pos.x, pos.y);
-					painel.repaint();
-					if (res == 1) {
-						jogador.getJogo().setEstado(Jogo.VEZ_JOG2);
-						principal.tempoDeEspera();
-					} else if (res > 1) {
-						if (jogador.getNavio(res).estaDestruido()) {
-							// principal.mostraEvento("Você afundou o "
-							// + jogador.getNavio(res).getNome().toLowerCase()
-							// + " do adversário!");
-							principal.mostraEventos();
-						}
-						if (jogador.getJogo().getEstado() == Jogo.TERMINADO) {
-							principal.mostraEventos();
-							// principal.mostraEvento("A batalha terminou! Você venceu!");
-						}
-					}
-				} catch (PosicaoJaAtingidaException ex) {
-					principal.mostraEvento(ex.getMessage());
-				}
+	public void adicionarNavio() {
+		if (idNavioAtual <= 32) { // Botão esquerdo?
+			try {
+				jogador.getTabuleiro().adicionaNavio(
+						jogador.getNavio(idNavioAtual));
+				if (idNavioAtual == 32) {
+					jogador.getJogo().setEstado(TipoEstado.VEZ_JOG1);
+				} else
+					idNavioAtual *= 2;
+			} catch (NullPointerException npe) {
 			}
-		}
-
-		@Override
-		public void mouseMoved(MouseEvent e) {
-			Point pos = painel.posicaoAtual;
-			if (pos.x != e.getX() / 30 || pos.y != e.getY() / 30) {
-				posicaoAtual = new Point(e.getX() / 30, e.getY() / 30);
-				if (jogador.getJogo().getEstado() == Jogo.POSICIONANDO_NAVIOS
-						&& !(jogador instanceof Robo)) {
-					Point posAntiga = jogador.getNavio(idNavioAtual)
-							.getPosicao();
-					jogador.getNavio(idNavioAtual).setPosicao(posicaoAtual);
-					if (jogador.getTabuleiro().cabeNavio(
-							jogador.getNavio(idNavioAtual))) {
-						painel.repaint();
-					} else {
-						jogador.getNavio(idNavioAtual).setPosicao(posAntiga);
-					}
-				}
-			}
-		}
-
-		@Override
-		public void mouseDragged(MouseEvent e) {
-			mouseMoved(e);
-		}
-
-		// Métodos não usados
-		@Override
-		public void mouseEntered(MouseEvent e) {
-		}
-
-		@Override
-		public void mouseExited(MouseEvent e) {
-		}
-
-		@Override
-		public void mousePressed(MouseEvent e) {
-		}
-
-		@Override
-		public void mouseReleased(MouseEvent e) {
 		}
 	}
+	
+	public void adicionarJogada(){
+		Point pos = posicaoAtual;
+		
+		try {
+			int res = jogador.getOponente().atira(pos.x, pos.y);
+			repaint();
+			if (res == 1) {
+				jogador.getJogo().setEstado(TipoEstado.VEZ_JOG2);
+				principal.tempoDeEspera();
+			} else if ( res > 1){
+					if (jogador.getNavio(res).estaDestruido()) {
+//                        principal.mostraEvento("Você afundou o "
+//                                + jogador.getNavio(res).getNome().toLowerCase()
+//                                + " do adversário!");								
+                        principal.mostraEventos();
+					}
+					if (jogador.getJogo().getEstado() == TipoEstado.TERMINADO) {
+                        principal.mostraEventos();
+//                        principal.mostraEvento("A batalha terminou! Você venceu!");
+					}
+			}
+		} catch (PosicaoJaAtingidaException ex) {
+			principal.mostraEvento(ex.getMessage());
+		}
+	}
+
+	public void posicionarNavio(Point posicaoAtual2) {
+		Point posAntiga = jogador.getNavio(idNavioAtual).getPosicao();
+		jogador.getNavio(idNavioAtual).setPosicao(posicaoAtual2);
+		if (jogador.getTabuleiro().cabeNavio(jogador.getNavio(idNavioAtual))) {
+			repaint();
+		} else {
+			jogador.getNavio(idNavioAtual).setPosicao(posAntiga);
+		}
+		
+	}
+
 }
