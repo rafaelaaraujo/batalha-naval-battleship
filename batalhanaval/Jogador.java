@@ -35,7 +35,7 @@ public class Jogador implements Serializable {
 
 	public Jogador(Jogo jogo) {
 		this.jogo = jogo;
-		this.tabuleiro = new Tabuleiro(10, 10); // Tabuleiro zerado
+		this.tabuleiro = new Tabuleiro(); // Tabuleiro zerado
 		this.frota = new Navio[5];
 
 		this.tiros = new ArrayList<Point>();

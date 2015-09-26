@@ -13,6 +13,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
@@ -28,6 +29,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.Timer;
 
+import enuns.TipoNavio;
 import batalhanaval.*;
 
 /**
@@ -43,14 +45,10 @@ public class JanelaPrincipal extends JFrame {
 	private Jogo jogo;
 	private int dificuldadeAtual;
 
-	// Imagens
-	private Image imagensNavios[];
-	private Image fogo, agua, fundo1, fundo2;
-	
 	// Grades
 	private PainelGrade mapa1;
 	private PainelGrade mapa2;
-	
+
 	// Menus
 	private JMenuBar barraMenus;
 
@@ -70,12 +68,12 @@ public class JanelaPrincipal extends JFrame {
 	private JMenuItem itemAjudaSobre;
 
 	private JTextArea caixaEventos;
-	
+
 	private Timer temp;
 
 	public JanelaPrincipal(Jogo jogo) {
 		super("Batalha Naval " + Principal.VERSAO);
-		
+
 		this.jogo = jogo;
 		this.dificuldadeAtual = jogo.getDificuldade();
 
@@ -92,77 +90,38 @@ public class JanelaPrincipal extends JFrame {
 					if (res == 1) {
 						temp.stop();
 						JanelaPrincipal.this.jogo.setEstado(Jogo.VEZ_JOG1);
-					} else if ( res > 1) {
+					} else if (res > 1) {
 						if (JanelaPrincipal.this.jogo.getEstado() == Jogo.TERMINADO) {
 							temp.stop();
-							//mostraEvento("A batalha terminou! Você foi derrotado!");
-                            mostraEventos();
-						} else if (JanelaPrincipal.this.jogo.getJogador(
-								0 ).getNavio(res).estaDestruido())
-							//mostraEvento("O adversário afundou o seu "
-							//		+ JanelaPrincipal.this.jogo.getJogador(
-							//				0 ).getNavio(res).getNome().toLowerCase() + "!");
-                            mostraEventos();
+							// mostraEvento("A batalha terminou! Você foi derrotado!");
+							mostraEventos();
+						} else if (JanelaPrincipal.this.jogo.getJogador(0)
+								.getNavio(res).estaDestruido())
+							// mostraEvento("O adversário afundou o seu "
+							// + JanelaPrincipal.this.jogo.getJogador(
+							// 0 ).getNavio(res).getNome().toLowerCase() + "!");
+							mostraEventos();
 					}
 				}
 			}
 		};
-		
-		temp =  new Timer(1000, fazJogada);
-		
-		abreImagens();
+
+		temp = new Timer(1000, fazJogada);
+
 		adicionaCaixaEventos();
 		adicionaGrades();
 		adicionaMenus();
-		
+
 	}
 
-	/**
-	 * Lê as imagens a partir do disco.
-	 * 
-	 * As imagens podem ser acessadas pelos métodos
-	 * getImagemFogo(), getImagemAgua() e getImagemNavio(int idNavio).
-	 * 
-	 */
-	private void abreImagens() {
-		imagensNavios = new Image[10]; // 5 navios
-		String arquivos1[] = new String[]
-		        {"agua", "fogo", "mar1", "mar2"};
-		String arquivos2[] = new String[]
-		        {"BarcoPatrulha", "Destroier", "Submarino",
-				 "Encouracado", "PortaAvioes"};
-		try {
-			agua = ImageIO.read(getClass().getClassLoader().getResource("img/"
-					+ arquivos1[0] + ".png"));
-			fogo = ImageIO.read(getClass().getClassLoader().getResource("img/"
-					+ arquivos1[1] + ".png"));
-			fundo1 = ImageIO.read(getClass().getClassLoader().getResource("img/"
-					+ arquivos1[2] + ".png"));
-			fundo2 = ImageIO.read(getClass().getClassLoader().getResource("img/"
-					+ arquivos1[3] + ".png"));
-			for (int i=0; i<10; i++) {
-				imagensNavios[i] = ImageIO.read(
-					getClass().getClassLoader().getResource("img/"
-							+ (i > 4
-									? arquivos2[i-5] + "V"
-											: arquivos2[i] + "H") + ".png"));
-			}
-		} catch (Exception e) {
-			System.err.println(e.getLocalizedMessage());
-			System.exit(0);
-		}
-	}
 
 	private void adicionaGrades() {
 		JPanel mapas = new JPanel(new GridLayout(1, 2, 30, 10));
-		//mapas.setPreferredSize(new Dimension(830, 400));
 		mapas.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-		mapa1 = new PainelGrade(this,
-				this.jogo.getJogador(0), fundo1);
-		mapa2 = new PainelGrade(this,
-				this.jogo.getJogador(1), fundo2);
-		
+		mapa1 = new PainelGrade(this, this.jogo.getJogador(0), 0);
+		mapa2 = new PainelGrade(this, this.jogo.getJogador(1), 1);
+
 		mapas.add(mapa1);
 		mapas.add(mapa2);
 		add(mapas, BorderLayout.NORTH);
@@ -181,7 +140,7 @@ public class JanelaPrincipal extends JFrame {
 		itemJogoSalvar.setMnemonic('S');
 		itemJogoSair = new JMenuItem("Sair");
 		itemJogoSair.setMnemonic('R');
-		
+
 		itemJogoNovo.addActionListener(ta);
 		itemJogoAbrir.addActionListener(ta);
 		itemJogoSalvar.addActionListener(ta);
@@ -200,7 +159,7 @@ public class JanelaPrincipal extends JFrame {
 		itemNivelDificil = new JRadioButtonMenuItem("Difícil");
 		itemNivelDificil.setMnemonic('D');
 		itemNivelDificil.addActionListener(ta);
-		
+
 		itemNivelAtual = itemNivelFacil;
 
 		ButtonGroup grupoNivel = new ButtonGroup();
@@ -235,30 +194,6 @@ public class JanelaPrincipal extends JFrame {
 		setJMenuBar(barraMenus);
 	}
 
-	public Image getImagemFogo () {
-		return fogo;
-	}
-	
-	public Image getImagemAgua() {
-		return agua;
-	}
-
-	public Image getImagemNavio(int id, int or) {
-		switch (id) {
-		case Navio.BARCO_PATRULHA:
-			return (or == Navio.VERTICAL ? imagensNavios[5] : imagensNavios[0]);
-		case Navio.DESTROIER:                                             
-			return (or == Navio.VERTICAL ? imagensNavios[6] : imagensNavios[1]);
-		case Navio.SUBMARINO:                                             
-			return (or == Navio.VERTICAL ? imagensNavios[7] : imagensNavios[2]);
-		case Navio.ENCOURACADO:                                           
-			return (or == Navio.VERTICAL ? imagensNavios[8] : imagensNavios[3]);
-		case Navio.PORTA_AVIOES:                                          
-			return (or == Navio.VERTICAL ? imagensNavios[9] : imagensNavios[4]);
-		default:
-			return null;
-		}
-	}
 
 	public void atualizaGrades() {
 		mapa1.repaint();
@@ -280,21 +215,21 @@ public class JanelaPrincipal extends JFrame {
 		add(painelEventos, BorderLayout.SOUTH);
 	}
 
-	public void mostraEvento (String msg) {
+	public void mostraEvento(String msg) {
 		caixaEventos.append("> " + msg + "\n");
 		// Rolagem automática
-		caixaEventos.setCaretPosition(caixaEventos.getDocument().getLength() );		
+		caixaEventos.setCaretPosition(caixaEventos.getDocument().getLength());
 	}
 
-    public void mostraEventos () {
-        Evento e = jogo.getEvento();
+	public void mostraEventos() {
+		Evento e = jogo.getEvento();
 
-        while (e != null) {
-            mostraEvento(e.getMensagem());
+		while (e != null) {
+			mostraEvento(e.getMensagem());
 
-            e = jogo.getEvento();
-        }
-    }
+			e = jogo.getEvento();
+		}
+	}
 
 	private class TratadorAcoes implements ActionListener {
 
@@ -312,7 +247,8 @@ public class JanelaPrincipal extends JFrame {
 			} else if (src == itemJogoSalvar) {
 				try {
 					ObjectOutputStream saida = new ObjectOutputStream(
-							new FileOutputStream("dados" + File.separator + "jogosalvo.dat"));
+							new FileOutputStream("dados" + File.separator
+									+ "jogosalvo.dat"));
 					saida.writeObject(jogo);
 					saida.close();
 				} catch (FileNotFoundException e1) {
@@ -322,14 +258,14 @@ public class JanelaPrincipal extends JFrame {
 					mostraEvento("Não foi possível salvar!");
 					e1.printStackTrace();
 				}
-				mostraEvento ("Jogo salvo com sucesso!");
-			}else if (src == itemJogoAbrir) {
+				mostraEvento("Jogo salvo com sucesso!");
+			} else if (src == itemJogoAbrir) {
 				ObjectInputStream entrada;
 				try {
-					entrada = new ObjectInputStream(
-							new FileInputStream("dados" + File.separator + "jogosalvo.dat"));
-					jogo = (Jogo)entrada.readObject();
-					
+					entrada = new ObjectInputStream(new FileInputStream("dados"
+							+ File.separator + "jogosalvo.dat"));
+					jogo = (Jogo) entrada.readObject();
+
 					// Restaura a dificuldade do jogo
 					if (jogo.getDificuldade() == Jogo.FACIL) {
 						itemNivelFacil.setSelected(true);
@@ -341,10 +277,10 @@ public class JanelaPrincipal extends JFrame {
 						itemNivelDificil.setSelected(true);
 						dificuldadeAtual = Jogo.DIFICIL;
 					}
-					
+
 					mapa1.reset(jogo.getJogador(0));
 					mapa2.reset(jogo.getJogador(1));
-					mostraEvento ("Jogo aberto com sucesso!");
+					mostraEvento("Jogo aberto com sucesso!");
 					entrada.close();
 				} catch (FileNotFoundException e1) {
 					mostraEvento("Arquivo não encontrado!");
@@ -357,13 +293,14 @@ public class JanelaPrincipal extends JFrame {
 				}
 			} else if (src instanceof JRadioButtonMenuItem
 					&& src != itemNivelAtual) {
-				JOptionPane.showMessageDialog(null,
-						"O grau de dificuldade será modificado no próximo jogo.",
-						"Dificuldade", JOptionPane.INFORMATION_MESSAGE);
+				JOptionPane
+						.showMessageDialog(
+								null,
+								"O grau de dificuldade será modificado no próximo jogo.",
+								"Dificuldade", JOptionPane.INFORMATION_MESSAGE);
 				dificuldadeAtual = (src == itemNivelFacil ? Jogo.FACIL
-						: (src == itemNivelMedio ? Jogo.MEDIO
-								: Jogo.DIFICIL));
-					itemNivelAtual = (JRadioButtonMenuItem)src;
+						: (src == itemNivelMedio ? Jogo.MEDIO : Jogo.DIFICIL));
+				itemNivelAtual = (JRadioButtonMenuItem) src;
 			} else if (src == itemAjudaSobre) {
 				JanelaSobre sobre = new JanelaSobre(JanelaPrincipal.this);
 				sobre.pack();
@@ -371,12 +308,12 @@ public class JanelaPrincipal extends JFrame {
 			}
 		}
 	}
-	
+
 	/**
 	 * Inicia o temporizador do jogador automático.
 	 * 
 	 */
-	public void tempoDeEspera (){
+	public void tempoDeEspera() {
 		temp.start();
 	}
 }

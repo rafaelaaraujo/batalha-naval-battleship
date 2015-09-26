@@ -28,8 +28,8 @@ public class Tabuleiro implements Serializable {
 
 	private int mapa[][];
 
-	public Tabuleiro(int largura, int altura) {
-		mapa = new int[largura][altura];
+	public Tabuleiro() {
+		mapa = new int[15][15];
 		
 		for (int i = 0; i < mapa.length; i++)
 			for (int j = 0; j < mapa[i].length; j++)
@@ -58,8 +58,7 @@ public class Tabuleiro implements Serializable {
 	public boolean cabeNavio(Navio navio) {
 		try {
 			for (Point p : navio.getArrayPosicao()) {
-				if (p.x > mapa.length-1 || p.y > mapa[0].length-1
-						|| mapa[p.x][p.y] > 1) {
+				if (p.x > mapa.length-1 || p.y > mapa[0].length-1|| mapa[p.x][p.y] > 1) {
 					return false;				
 				}
 			}
