@@ -6,11 +6,13 @@ import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 
+import navios.Navio;
 import enuns.TipoNavio;
 
 public class TratarImagens {
 	// Imagens
-	private ArrayList<Image> imagensNavios;
+	private ArrayList<Image> imagensNaviosVertical;
+	private ArrayList<Image> imagensNaviosHorizonal;
 
 	public TratarImagens() {
 		abreImagensNavios();
@@ -18,21 +20,21 @@ public class TratarImagens {
 
 	public Image getImagemNavio(int tipoNavio, int or) {
 		switch (tipoNavio) {
-		case Navio.BARCO_PATRULHA:
-			return (or == Navio.VERTICAL ? imagensNavios.get(5) : imagensNavios
-					.get(0));
-		case Navio.DESTROIER:
-			return (or == Navio.VERTICAL ? imagensNavios.get(6) : imagensNavios
-					.get(1));
-		case Navio.SUBMARINO:
-			return (or == Navio.VERTICAL ? imagensNavios.get(7) : imagensNavios
-					.get(2));
-		case Navio.ENCOURACADO:
-			return (or == Navio.VERTICAL ? imagensNavios.get(8) : imagensNavios
-					.get(3));
-		case Navio.PORTA_AVIOES:
-			return (or == Navio.VERTICAL ? imagensNavios.get(9) : imagensNavios
-					.get(4));
+		case 2:
+			return (or == Navio.VERTICAL ? imagensNaviosVertical.get(0)
+					: imagensNaviosHorizonal.get(0));
+		case 4:
+			return (or == Navio.VERTICAL ? imagensNaviosVertical.get(1)
+					: imagensNaviosHorizonal.get(1));
+		case 8:
+			return (or == Navio.VERTICAL ? imagensNaviosVertical.get(2)
+					: imagensNaviosHorizonal.get(2));
+		case 16:
+			return (or == Navio.VERTICAL ? imagensNaviosVertical.get(3)
+					: imagensNaviosHorizonal.get(3));
+		case 32:
+			return (or == Navio.VERTICAL ? imagensNaviosVertical.get(4)
+					: imagensNaviosHorizonal.get(4));
 		default:
 			return null;
 		}
@@ -54,20 +56,20 @@ public class TratarImagens {
 			return getImagem("mar2");
 	}
 
-
 	private void abreImagensNavios() {
 		try {
-			imagensNavios = new ArrayList<Image>(); // 5 navios
+			imagensNaviosVertical = new ArrayList<Image>();
 			String nomeNavios[] = new String[] { "BarcoPatrulha", "Destroier",
 					"Submarino", "Encouracado", "PortaAvioes" };
-			for (int i = 0; i < 10; i++) {
-				imagensNavios.add(i, getImagem((i > 4 ? nomeNavios[i - 5] + "V"
-						: nomeNavios[i] + "H")));
+
+			imagensNaviosHorizonal = new ArrayList<Image>();
+			for (int i = 0; i < 5; i++) {
+				imagensNaviosVertical.add(i, getImagem(nomeNavios[i] + "V"));
+				imagensNaviosHorizonal.add(i, getImagem(nomeNavios[i] + "H"));
 			}
 
 		} catch (Exception e) {
 			System.err.println(e.getLocalizedMessage());
-			System.exit(0);
 		}
 	}
 

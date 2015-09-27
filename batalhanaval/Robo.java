@@ -3,6 +3,8 @@ package batalhanaval;
 import java.awt.Point;
 import java.util.ArrayList;
 
+import navios.Navio;
+
 /**
  * Jogador automático, utilizando uma inteligência computacional
  * básica.

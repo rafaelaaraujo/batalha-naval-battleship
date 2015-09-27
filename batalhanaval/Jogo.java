@@ -84,7 +84,7 @@ public class Jogo implements Serializable {
         if (this.estado != TipoEstado.TERMINADO)
             return null;
 
-        return this.jogadores[0].getFrotaRestante() == 0
+        return this.jogadores[0].getFrotaRestante().size() == 0
             ? jogadores[1]
             : jogadores[0];           
     }

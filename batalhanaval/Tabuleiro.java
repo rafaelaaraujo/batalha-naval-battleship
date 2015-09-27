@@ -3,25 +3,8 @@ package batalhanaval;
 import java.awt.Point;
 import java.io.Serializable;
 
-/**
- * O tabuleiro do jogador.
- * 
- * Possui um array bidimensional de inteiros (mapa)
- * representando as seguintes informações:<br>
- * 
- * 1 - Quadrado vazio<br>
- * 2 - Barco de patrulha<br>
- * 4 - Destróier<br>
- * 8 - Submarino<br>
- * 16 - Encouraçado<br>
- * 32 - Porta-aviões<br>
- * 
- * Quando o quadrado é atingido, passa para o negativo.
- * 
- * @author Darlan P. de Campos
- * @author Roger de Córdova Farias
- *
- */
+import navios.Navio;
+
 public class Tabuleiro implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
@@ -69,7 +52,7 @@ public class Tabuleiro implements Serializable {
 	}
 
 	/**
-	 * Define uma posição do tabuleiro.
+	 * Define uma posicao do tabuleiro.
 	 * 
 	 * @param x Coluna
 	 * @param y Linha
@@ -102,18 +85,5 @@ public class Tabuleiro implements Serializable {
 		return (x < mapa.length && y < mapa[0].length
 				&& x >= 0 && y >= 0 
 				&& mapa[x][y] > 0);
-	}
-	
-	@Override
-	public String toString() {
-		String tab = new String();
-		
-		for (int i = 0; i < mapa.length; i++) {
-			for (int j = 0; j < mapa[i].length; j++)
-				tab += String.format("%4d", mapa[j][i]);
-			tab += "\n";
-		}
-		
-		return tab;
 	}
 }

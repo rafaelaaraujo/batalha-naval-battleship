@@ -6,9 +6,9 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
-import batalhanaval.exceptions.PosicaoJaAtingidaException;
-import batalhanaval.gui.PainelGrade;
+import telas.PainelGrade;
 import enuns.TipoEstado;
+import exceptions.PosicaoJaAtingidaException;
 
 public class TratadorMouse implements MouseListener, MouseMotionListener {
 	private PainelGrade painel;

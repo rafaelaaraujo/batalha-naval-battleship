@@ -4,8 +4,14 @@ import java.awt.Point;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import navios.BarcoPatrulha;
+import navios.Destroier;
+import navios.Encouracado;
+import navios.Navio;
+import navios.PortaAvioes;
+import navios.Submarino;
 import enuns.TipoEstado;
-import batalhanaval.exceptions.PosicaoJaAtingidaException;
+import exceptions.PosicaoJaAtingidaException;
 
 /**
  * Jogador de batalha naval.
@@ -21,11 +27,14 @@ public class Jogador implements Serializable {
 	
 	private Jogo jogo;
 	private Tabuleiro tabuleiro;
-	private Navio[] frota;
+	private ArrayList<Navio> frota = new ArrayList<Navio>();
+	private ArrayList<Point> tiros = new ArrayList<Point>();
 
-	private ArrayList<Point> tiros;
+	private ArrayList<Navio> frotaRestante = new ArrayList<Navio>();
 
-	private int frotaRestante;
+	private int i;
+
+	private int j;
 
 	/**
 	 * Cria um novo jogador para o jogo.
@@ -37,19 +46,17 @@ public class Jogador implements Serializable {
 	public Jogador(Jogo jogo) {
 		this.jogo = jogo;
 		this.tabuleiro = new Tabuleiro(); // Tabuleiro zerado
-		this.frota = new Navio[5];
 
-		this.tiros = new ArrayList<Point>();
+        frota.add(new PortaAvioes(this));
+        frota.add(new Encouracado(this));
+        frota.add(new Submarino(this));
+        frota.add(new Destroier(this));
+        frota.add(new BarcoPatrulha(this));
 
-        frota[0] = Navio.constroiNavio(Navio.BARCO_PATRULHA, this);
-        frota[1] = Navio.constroiNavio(Navio.DESTROIER, this);
-        frota[2] = Navio.constroiNavio(Navio.SUBMARINO, this);
-        frota[3] = Navio.constroiNavio(Navio.ENCOURACADO, this);
-        frota[4] = Navio.constroiNavio(Navio.PORTA_AVIOES, this);
-
-		for (int i = 0; i < frota.length; i++)
-			this.frotaRestante += frota[i].getId();
+        frotaRestante.addAll(frota);
+        
 	}
+
 
 	/**
 	 * Atira num ponto determinado.
@@ -58,16 +65,13 @@ public class Jogador implements Serializable {
 	 * @param coluna
 	 */
 	public int atira(int coluna, int linha) throws PosicaoJaAtingidaException{
-		int valorAtual = getOponente().getTabuleiro().getPosicao(
-				coluna, linha);
+		int valorAtual = getOponente().getTabuleiro().getPosicao(coluna, linha);
 
-		// Quadrado nao atingido?
-		if (valorAtual >= 1) {
+		if (valorAtual >= 1) {   // -1 posição atingida
 			tiros.add(new Point(coluna, linha));
-			getOponente().getTabuleiro().setPosicao(coluna, linha, -valorAtual);
-			if (valorAtual > 1 
-					&& getOponente().getNavio(valorAtual).estaDestruido()) {
-				getOponente().destroiNavio(valorAtual);
+			getOponente().getTabuleiro().setPosicao(coluna, linha, -valorAtual); // coloca posicao como atingida
+			if (valorAtual > 1 && getOponente().getNavio(valorAtual).estaDestruido()) {
+				getOponente().destroirNavio(valorAtual);
 			}
 		} else {
 			throw new PosicaoJaAtingidaException();
@@ -99,10 +103,10 @@ public class Jogador implements Serializable {
 	 * @param or Orientação (vertical ou horizontal).
 	 * @param id Identificador.
 	 */
-	public void posicionaNavio(Point pos, int id) {
+	public void posicionarNavio(Point pos, int id) {
 		getNavio(id).setPosicao(pos);
-		int i = pos.x;
-		int j = pos.y;
+		i = pos.x;
+		j = pos.y;
 		int k = 0;
 
 		while(k < getNavio(id).getTamanho()) {
@@ -122,16 +126,27 @@ public class Jogador implements Serializable {
 	 * 
 	 * @param id O identificador do navio destruído.
 	 */
-	private void destroiNavio(int id) {
-		frotaRestante -= id;
+	private void destroirNavio(int id) {
+		removerNavio(id);
 		
         jogo.addEvento( getOponente() instanceof Robo
                 ? "O adversário afundou o seu " + getNavio(id).getNome().toLowerCase() + "!"
                 : "Você afundou o " + getNavio(id).getNome().toLowerCase() + " do adversário!" );
 		
-		if (frotaRestante == 0)
+		if (frotaRestante.size() == 0)
 			jogo.setEstado(TipoEstado.TERMINADO);
 	}
+
+	private void removerNavio(int id) {
+		for(int i =  0; i< frotaRestante.size();i++){
+			if(frotaRestante.get(i).getId() == id){
+				frotaRestante.remove(i);
+				break;
+			}
+		}
+		
+	}
+
 
 	public Jogo getJogo() {
 		return jogo;
@@ -141,14 +156,14 @@ public class Jogador implements Serializable {
 		return tabuleiro;
 	}
 
-	public Navio[] getFrota() {
+	public ArrayList<Navio> getFrota() {
 		return frota;
 	}
 	
 	public Navio getNavio(int id) {
-		for (int i = 0; i < frota.length; i++) {
-			if (frota[i].getId() == id)
-				return frota[i];
+		for (int i = 0; i < frota.size(); i++) {
+			if (frota.get(i).getId() == id)
+				return frota.get(i);
 		}
 		return null;
 	}
@@ -157,7 +172,7 @@ public class Jogador implements Serializable {
 		return tiros;
 	}
 
-	public int getFrotaRestante() {
+	public ArrayList<Navio> getFrotaRestante() {
 		return frotaRestante;
 	}
 

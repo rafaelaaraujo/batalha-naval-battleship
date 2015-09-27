@@ -1,4 +1,4 @@
-package batalhanaval.exceptions;
+package exceptions;
 
 
 public class PosicaoJaAtingidaException extends Exception {

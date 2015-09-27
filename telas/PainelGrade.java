@@ -1,4 +1,4 @@
-package batalhanaval.gui;
+package telas;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -13,9 +13,10 @@ import java.io.IOException;
 
 import javax.swing.JPanel;
 
+import navios.Navio;
 import enuns.TipoEstado;
+import exceptions.PosicaoJaAtingidaException;
 import batalhanaval.*;
-import batalhanaval.exceptions.PosicaoJaAtingidaException;
 
 @SuppressWarnings("serial")
 public class PainelGrade extends JPanel {
@@ -92,8 +93,7 @@ public class PainelGrade extends JPanel {
 		for (Navio navio : jogador.getFrota()) {
 			if (navio.getPosicao() != null)
 				if (mostrarNavios || navio.estaDestruido())
-					g.drawImage(
-							tratarImagens.getImagemNavio(navio.getId(),
+					g.drawImage(tratarImagens.getImagemNavio(navio.getId(),
 									navio.getOrientacao()),
 							navio.getPosicao().x * 30,
 							navio.getPosicao().y * 30, null);
@@ -120,8 +120,7 @@ public class PainelGrade extends JPanel {
 
 	public void alteraOrientacaoNavio() {
 		int orientacaoAntiga = orientacaoAtual;
-		orientacaoAtual = (orientacaoAtual == Navio.VERTICAL ? Navio.HORIZONTAL
-				: Navio.VERTICAL);
+		orientacaoAtual = (orientacaoAtual == Navio.VERTICAL ? Navio.HORIZONTAL: Navio.VERTICAL);
 
 		jogador.getNavio(idNavioAtual).setOrientacao(orientacaoAtual);
 

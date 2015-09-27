@@ -1,6 +1,6 @@
 package batalhanaval;
 
-import batalhanaval.gui.*;
+import telas.*;
 
 public class Principal {
 	// Versão do jogo
