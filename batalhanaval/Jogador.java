@@ -10,6 +10,7 @@ import navios.Encouracado;
 import navios.Navio;
 import navios.PortaAvioes;
 import navios.Submarino;
+import enuns.OrientacaoNavio;
 import enuns.TipoEstado;
 import exceptions.PosicaoJaAtingidaException;
 
@@ -112,7 +113,7 @@ public class Jogador implements Serializable {
 		while(k < getNavio(id).getTamanho()) {
 			tabuleiro.setPosicao(pos.x, pos.y, id);
 			
-			if (getNavio(id).getOrientacao() == Navio.VERTICAL)
+			if (getNavio(id).getOrientacao() == OrientacaoNavio.VERTICAL)
 				j++;
 			else
 				i++;

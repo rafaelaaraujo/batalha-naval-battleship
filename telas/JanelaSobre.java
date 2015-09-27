@@ -33,7 +33,7 @@ public class JanelaSobre extends JDialog implements ActionListener {
 		painel.setPreferredSize(new Dimension(300, 250));
 		painel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-		JTextArea creditos = new JTextArea("Batalha Naval " + Principal.VERSAO
+		JTextArea creditos = new JTextArea("Batalha Naval " 
 				+ "\n\nUm jogo multiplataforma de estratégia, "
 				+ "\ncom uso de inteligência artificial."
 				+ "\n\nUFSC/CTC/INE"

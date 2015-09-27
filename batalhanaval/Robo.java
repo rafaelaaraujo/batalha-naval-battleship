@@ -3,6 +3,7 @@ package batalhanaval;
 import java.awt.Point;
 import java.util.ArrayList;
 
+import enuns.OrientacaoNavio;
 import navios.Navio;
 
 /**
@@ -53,15 +54,7 @@ public class Robo extends Jogador {
 	 * 
 	 */
 	public int atira (){
-		if (getJogo().getDificuldade()==Jogo.FACIL){
-			return super.atira();
-		}else if(getJogo().getDificuldade()==Jogo.MEDIO){
-			int i = (int)(Math.random()*2);
 
-			if (i==1){
-				return super.atira();
-			}
-		}
 		return atiraInteligente();
 	}
 	
@@ -77,7 +70,7 @@ public class Robo extends Jogador {
 
 		Point pos = new Point(x, y);
 		n.setPosicao(pos);
-		n.setOrientacao(orientacao);
+		n.setOrientacao(OrientacaoNavio.HORIZONTAL);
 		if (!getTabuleiro().cabeNavio(n)) {
 			posicionaNavio(n);
 		} else{

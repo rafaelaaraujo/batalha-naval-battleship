@@ -18,17 +18,6 @@ public class Jogo implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    //// Constantes
-    // Níveis de dificuldade
-    public static final int FACIL = 0;
-    public static final int MEDIO = 1;
-    public static final int DIFICIL = 2;
-
-    // Estados do jogo
-    //public static final int POSICIONANDO_NAVIOS = 0;
-    //public static final int VEZ_JOG1 = 1;
-    //public static final int VEZ_JOG2 = 2;
-    //public static final int TERMINADO = 3;
 
     private Jogador[] jogadores;
 
@@ -38,12 +27,10 @@ public class Jogo implements Serializable {
     // Fila de eventos
     private ArrayList<Evento> eventos;
 
-    public Jogo(int dif) {
+    public Jogo() {
         jogadores = new Jogador[2];
         jogadores[0] = new Jogador(this);
         jogadores[1] = new Robo(this);
-
-        dificuldade = dif;
 
         eventos = new ArrayList<Evento>();
 

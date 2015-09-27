@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import javax.imageio.ImageIO;
 
 import navios.Navio;
+import enuns.OrientacaoNavio;
 import enuns.TipoNavio;
 
 public class TratarImagens {
@@ -18,22 +19,22 @@ public class TratarImagens {
 		abreImagensNavios();
 	}
 
-	public Image getImagemNavio(int tipoNavio, int or) {
+	public Image getImagemNavio(int tipoNavio, OrientacaoNavio or) {
 		switch (tipoNavio) {
 		case 2:
-			return (or == Navio.VERTICAL ? imagensNaviosVertical.get(0)
+			return (or == OrientacaoNavio.VERTICAL ? imagensNaviosVertical.get(0)
 					: imagensNaviosHorizonal.get(0));
 		case 4:
-			return (or == Navio.VERTICAL ? imagensNaviosVertical.get(1)
+			return (or == OrientacaoNavio.VERTICAL ? imagensNaviosVertical.get(1)
 					: imagensNaviosHorizonal.get(1));
 		case 8:
-			return (or == Navio.VERTICAL ? imagensNaviosVertical.get(2)
+			return (or == OrientacaoNavio.VERTICAL ? imagensNaviosVertical.get(2)
 					: imagensNaviosHorizonal.get(2));
 		case 16:
-			return (or == Navio.VERTICAL ? imagensNaviosVertical.get(3)
+			return (or == OrientacaoNavio.VERTICAL ? imagensNaviosVertical.get(3)
 					: imagensNaviosHorizonal.get(3));
 		case 32:
-			return (or == Navio.VERTICAL ? imagensNaviosVertical.get(4)
+			return (or == OrientacaoNavio.VERTICAL ? imagensNaviosVertical.get(4)
 					: imagensNaviosHorizonal.get(4));
 		default:
 			return null;

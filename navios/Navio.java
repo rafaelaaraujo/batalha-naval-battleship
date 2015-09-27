@@ -3,23 +3,22 @@ package navios;
 import java.awt.Point;
 import java.io.Serializable;
 
+import enuns.OrientacaoNavio;
 import batalhanaval.Jogador;
 
 public abstract class Navio implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	
-	public static final int HORIZONTAL = 0;
-	public static final int VERTICAL = 1;
+
 
 	private Jogador jogador;
 	private Point posicao;
-	private int orientacao;
+	private OrientacaoNavio orientacao;
 
 	public Navio(Jogador jogador) {
 		this.jogador = jogador;
 		this.posicao = null;
-		this.orientacao = HORIZONTAL;
+		this.orientacao = OrientacaoNavio.HORIZONTAL;
 	}
 
 	public abstract String getNome();
@@ -44,7 +43,7 @@ public abstract class Navio implements Serializable {
 		
 		while(k < getTamanho()) {
 			arrayPos[k++] = new Point(i, j);
-			if (orientacao == VERTICAL)
+			if (orientacao == OrientacaoNavio.VERTICAL)
 				j++;
 			else
 				i++;	
@@ -52,7 +51,7 @@ public abstract class Navio implements Serializable {
 		return arrayPos;
 	}
 
-	public int getOrientacao() {
+	public OrientacaoNavio getOrientacao() {
 		return orientacao;
 	}
 
@@ -60,7 +59,7 @@ public abstract class Navio implements Serializable {
 		posicao = pos;
 	}
 	
-	public void setOrientacao(int orientacao) {
+	public void setOrientacao(OrientacaoNavio orientacao) {
 		this.orientacao = orientacao;
 	}
 

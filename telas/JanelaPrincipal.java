@@ -3,35 +3,21 @@ package telas;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridLayout;
-import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.util.ArrayList;
 
-import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.JFrame;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.Timer;
 
+import batalhanaval.Evento;
+import batalhanaval.Jogo;
 import enuns.TipoEstado;
-import enuns.TipoNavio;
-import batalhanaval.*;
 
 /**
  * A janela principal da aplicação.
@@ -44,7 +30,6 @@ import batalhanaval.*;
 @SuppressWarnings("serial")
 public class JanelaPrincipal extends JFrame {
 	private Jogo jogo;
-	private int dificuldadeAtual;
 
 	// Grades
 	private PainelGrade mapa1;
@@ -58,11 +43,13 @@ public class JanelaPrincipal extends JFrame {
 
 	private Timer temp;
 
-	public JanelaPrincipal(Jogo jogo) {
-		super("Batalha Naval " + Principal.VERSAO);
+	// Versão do jogo
+	public static final float VERSAO = 1.1f;
 
-		this.jogo = jogo;
-		this.dificuldadeAtual = jogo.getDificuldade();
+	
+	public JanelaPrincipal() {
+		
+		this.jogo = new Jogo();
 
 		getContentPane().setLayout(new BorderLayout());
 		setResizable(false);

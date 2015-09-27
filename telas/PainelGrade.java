@@ -14,6 +14,7 @@ import java.io.IOException;
 import javax.swing.JPanel;
 
 import navios.Navio;
+import enuns.OrientacaoNavio;
 import enuns.TipoEstado;
 import exceptions.PosicaoJaAtingidaException;
 import batalhanaval.*;
@@ -29,7 +30,7 @@ public class PainelGrade extends JPanel {
 	private Dimension dim;
 
 	private int idNavioAtual;
-	private int orientacaoAtual;
+	private OrientacaoNavio orientacaoAtual;
 	public Point posicaoAtual;
 
 	private boolean mostrarNavios;
@@ -54,7 +55,7 @@ public class PainelGrade extends JPanel {
 		// Atual navio sendo posicionado
 		if (!(jogador instanceof Robo)) {
 			idNavioAtual = 2;
-			orientacaoAtual = Navio.HORIZONTAL;
+			orientacaoAtual = OrientacaoNavio.HORIZONTAL;
 			jogador.getNavio(idNavioAtual).setPosicao(posicaoAtual);
 			principal.mostraEventos();
 			principal
@@ -63,7 +64,7 @@ public class PainelGrade extends JPanel {
 							+ "Para mudar a orientação, clique com o botão direito.");
 		}
 
-		TratadorMouse tm = new TratadorMouse(this,jogador);
+		TratadorMouse tm = new TratadorMouse(this, jogador);
 		addMouseListener(tm);
 		addMouseMotionListener(tm);
 
@@ -80,25 +81,14 @@ public class PainelGrade extends JPanel {
 	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		g.drawImage(fundo, 0, 0, null);
-		g.setColor(Color.BLUE);
-		g.drawRect(0, 0, this.getWidth() - 1, this.getHeight() - 1);
-		for (int i = 1; i < 20; i++) {
-			g.drawLine(i * 30, 0, i * 30,
-					jogador.getTabuleiro().getMapa().length * DIM_QUADRADO);
-			g.drawLine(0, i * 30, jogador.getTabuleiro().getMapa().length
-					* DIM_QUADRADO, i * 30);
-		}
 
-		for (Navio navio : jogador.getFrota()) {
-			if (navio.getPosicao() != null)
-				if (mostrarNavios || navio.estaDestruido())
-					g.drawImage(tratarImagens.getImagemNavio(navio.getId(),
-									navio.getOrientacao()),
-							navio.getPosicao().x * 30,
-							navio.getPosicao().y * 30, null);
-		}
+		desenhaTabuleiro(g);
+		desenhaFrota(g);
+		desenhaTiros(g);
 
+	}
+
+	private void desenhaTiros(Graphics g) {
 		try {
 			for (Point pt : jogador.getOponente().getTiros()) {
 				int valor = jogador.getTabuleiro().getPosicao(pt.x, pt.y);
@@ -112,15 +102,39 @@ public class PainelGrade extends JPanel {
 							pt.y * 30, null);
 				}
 			}
-
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
+	private void desenhaFrota(Graphics g) {
+		for (Navio navio : jogador.getFrota()) {
+			if (navio.getPosicao() != null)
+				if (mostrarNavios || navio.estaDestruido())
+					g.drawImage(
+							tratarImagens.getImagemNavio(navio.getId(),
+									navio.getOrientacao()),
+							navio.getPosicao().x * 30,
+							navio.getPosicao().y * 30, null);
+		}
+	}
+
+	private void desenhaTabuleiro(Graphics g) {
+		g.drawImage(fundo, 0, 0, null);
+		g.setColor(Color.BLUE);
+		g.drawRect(0, 0, this.getWidth() - 1, this.getHeight() - 1);
+		for (int i = 1; i < 20; i++) {
+			g.drawLine(i * 30, 0, i * 30,
+					jogador.getTabuleiro().getMapa().length * DIM_QUADRADO);
+			g.drawLine(0, i * 30, jogador.getTabuleiro().getMapa().length
+					* DIM_QUADRADO, i * 30);
+		}
+	}
+
 	public void alteraOrientacaoNavio() {
-		int orientacaoAntiga = orientacaoAtual;
-		orientacaoAtual = (orientacaoAtual == Navio.VERTICAL ? Navio.HORIZONTAL: Navio.VERTICAL);
+		OrientacaoNavio orientacaoAntiga = orientacaoAtual;
+		orientacaoAtual = (orientacaoAtual == OrientacaoNavio.VERTICAL ? OrientacaoNavio.HORIZONTAL
+				: OrientacaoNavio.VERTICAL);
 
 		jogador.getNavio(idNavioAtual).setOrientacao(orientacaoAtual);
 
@@ -134,8 +148,7 @@ public class PainelGrade extends JPanel {
 	public void adicionarNavio() {
 		if (idNavioAtual <= 32) { // Botão esquerdo?
 			try {
-				jogador.getTabuleiro().adicionaNavio(
-						jogador.getNavio(idNavioAtual));
+				jogador.getTabuleiro().adicionaNavio(jogador.getNavio(idNavioAtual));
 				if (idNavioAtual == 32) {
 					jogador.getJogo().setEstado(TipoEstado.VEZ_JOG1);
 				} else
@@ -144,27 +157,23 @@ public class PainelGrade extends JPanel {
 			}
 		}
 	}
-	
-	public void adicionarJogada(){
+
+	public void adicionarJogada() {
 		Point pos = posicaoAtual;
-		
+
 		try {
 			int res = jogador.getOponente().atira(pos.x, pos.y);
 			repaint();
 			if (res == 1) {
 				jogador.getJogo().setEstado(TipoEstado.VEZ_JOG2);
 				principal.tempoDeEspera();
-			} else if ( res > 1){
-					if (jogador.getNavio(res).estaDestruido()) {
-//                        principal.mostraEvento("Você afundou o "
-//                                + jogador.getNavio(res).getNome().toLowerCase()
-//                                + " do adversário!");								
-                        principal.mostraEventos();
-					}
-					if (jogador.getJogo().getEstado() == TipoEstado.TERMINADO) {
-                        principal.mostraEventos();
-//                        principal.mostraEvento("A batalha terminou! Você venceu!");
-					}
+			} else if (res > 1) {
+				if (jogador.getNavio(res).estaDestruido()) {
+					principal.mostraEventos();
+				}
+				if (jogador.getJogo().getEstado() == TipoEstado.TERMINADO) {
+					principal.mostraEventos();
+				}
 			}
 		} catch (PosicaoJaAtingidaException ex) {
 			principal.mostraEvento(ex.getMessage());
@@ -179,7 +188,7 @@ public class PainelGrade extends JPanel {
 		} else {
 			jogador.getNavio(idNavioAtual).setPosicao(posAntiga);
 		}
-		
+
 	}
 
 }
