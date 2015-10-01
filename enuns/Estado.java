@@ -1,5 +1,5 @@
 package enuns;
 
-public enum TipoEstado {
+public enum Estado {
 	POSICIONANDO_NAVIOS,VEZ_JOG1,VEZ_JOG2,TERMINADO;
 }

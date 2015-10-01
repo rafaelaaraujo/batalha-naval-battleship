@@ -2,5 +2,5 @@ package enuns;
 
 public enum OrientacaoNavio {
 
-	VERTICAL,HORIZONTAL;
+	VERTICAL,HORIZONTAL,DIAGONAL;
 }

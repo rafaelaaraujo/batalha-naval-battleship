@@ -12,8 +12,9 @@ import enuns.TipoNavio;
 
 public class TratarImagens {
 	// Imagens
-	private ArrayList<Image> imagensNaviosVertical;
-	private ArrayList<Image> imagensNaviosHorizonal;
+	private ArrayList<Image> imagensNaviosVertical = new ArrayList<Image>();
+	private ArrayList<Image> imagensNaviosHorizonal = new ArrayList<Image>();
+	private ArrayList<Image> imagensNaviosDiagonal = new ArrayList<Image>();
 
 	public TratarImagens() {
 		abreImagensNavios();
@@ -22,23 +23,34 @@ public class TratarImagens {
 	public Image getImagemNavio(int tipoNavio, OrientacaoNavio or) {
 		switch (tipoNavio) {
 		case 2:
-			return (or == OrientacaoNavio.VERTICAL ? imagensNaviosVertical.get(0)
-					: imagensNaviosHorizonal.get(0));
+			return getNavios(or).get(0);
 		case 4:
-			return (or == OrientacaoNavio.VERTICAL ? imagensNaviosVertical.get(1)
-					: imagensNaviosHorizonal.get(1));
+			return getNavios(or).get(1);
 		case 8:
-			return (or == OrientacaoNavio.VERTICAL ? imagensNaviosVertical.get(2)
-					: imagensNaviosHorizonal.get(2));
+			return getNavios(or).get(2);
 		case 16:
-			return (or == OrientacaoNavio.VERTICAL ? imagensNaviosVertical.get(3)
-					: imagensNaviosHorizonal.get(3));
+			return getNavios(or).get(3);
 		case 32:
-			return (or == OrientacaoNavio.VERTICAL ? imagensNaviosVertical.get(4)
-					: imagensNaviosHorizonal.get(4));
+			return getNavios(or).get(4);
 		default:
 			return null;
 		}
+	}
+
+	private ArrayList<Image> getNavios(OrientacaoNavio on) {
+		switch (on) {
+		case VERTICAL:
+			return imagensNaviosVertical;
+
+		case HORIZONTAL:
+			return imagensNaviosHorizonal;
+
+		case DIAGONAL:
+			return imagensNaviosDiagonal;
+		default:
+			return imagensNaviosHorizonal;
+		}
+
 	}
 
 	public Image getImagemFogo() throws IOException {
@@ -59,14 +71,15 @@ public class TratarImagens {
 
 	private void abreImagensNavios() {
 		try {
-			imagensNaviosVertical = new ArrayList<Image>();
-			String nomeNavios[] = new String[] { "BarcoPatrulha", "Destroier",
-					"Submarino", "Encouracado", "PortaAvioes" };
+			String nomeNavios[] = new String[] { "Cruzador", "Destroier",
+					"Submarino", "Encouracado", "PortaAvioes","Fragata","Corveta" };
 
 			imagensNaviosHorizonal = new ArrayList<Image>();
 			for (int i = 0; i < 5; i++) {
 				imagensNaviosVertical.add(i, getImagem(nomeNavios[i] + "V"));
 				imagensNaviosHorizonal.add(i, getImagem(nomeNavios[i] + "H"));
+				imagensNaviosDiagonal.add(i, getImagem(nomeNavios[i] + "D"));
+
 			}
 
 		} catch (Exception e) {

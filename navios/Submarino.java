@@ -1,11 +1,10 @@
 package navios;
 
-import java.awt.Point;
-
-import enuns.TipoNavio;
 import batalhanaval.Jogador;
 
-public class Submarino extends Navio{
+public class Submarino extends Navio {
+
+	private static final long serialVersionUID = 1L;
 
 	public Submarino(Jogador jogador) {
 		super(jogador);
@@ -18,12 +17,12 @@ public class Submarino extends Navio{
 
 	@Override
 	public int getTamanho() {
-		return 3;
+		return 4;
 	}
 
 	@Override
 	public int getId() {
-		return 8;
+		return 128;
 	}
 
 }

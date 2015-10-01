@@ -26,7 +26,7 @@ public class PortaAvioes extends Navio{
 
 	@Override
 	public int getId() {
-		return 32;
+		return 64;
 	}
 
 }

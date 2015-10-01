@@ -15,15 +15,15 @@ import javax.swing.JPanel;
 
 import navios.Navio;
 import enuns.OrientacaoNavio;
-import enuns.TipoEstado;
+import enuns.Estado;
 import exceptions.PosicaoJaAtingidaException;
 import batalhanaval.*;
 
 @SuppressWarnings("serial")
-public class PainelGrade extends JPanel {
+public class TelaTabuleiro extends JPanel {
 	public static final int DIM_QUADRADO = 30;
 
-	private JanelaPrincipal principal;
+	private TelaPrincipal principal;
 	private TratarImagens tratarImagens = new TratarImagens();
 	private Jogador jogador;
 	private Image fundo;
@@ -35,7 +35,7 @@ public class PainelGrade extends JPanel {
 
 	private boolean mostrarNavios;
 
-	public PainelGrade(JanelaPrincipal p, Jogador j, int tipoMar) {
+	public TelaTabuleiro(TelaPrincipal p, Jogador j, int tipoMar) {
 		principal = p;
 		jogador = j;
 		try {
@@ -112,8 +112,7 @@ public class PainelGrade extends JPanel {
 			if (navio.getPosicao() != null)
 				if (mostrarNavios || navio.estaDestruido())
 					g.drawImage(
-							tratarImagens.getImagemNavio(navio.getId(),
-									navio.getOrientacao()),
+							tratarImagens.getImagemNavio(navio.getId(),navio.getOrientacao()),
 							navio.getPosicao().x * 30,
 							navio.getPosicao().y * 30, null);
 		}
@@ -122,19 +121,35 @@ public class PainelGrade extends JPanel {
 	private void desenhaTabuleiro(Graphics g) {
 		g.drawImage(fundo, 0, 0, null);
 		g.setColor(Color.BLUE);
-		g.drawRect(0, 0, this.getWidth() - 1, this.getHeight() - 1);
+		g.drawRect(0, 0, this.getWidth() - 2, this.getHeight() - 2);
+		
 		for (int i = 1; i < 20; i++) {
 			g.drawLine(i * 30, 0, i * 30,
 					jogador.getTabuleiro().getMapa().length * DIM_QUADRADO);
-			g.drawLine(0, i * 30, jogador.getTabuleiro().getMapa().length
-					* DIM_QUADRADO, i * 30);
+			g.drawLine(0, i * 30, jogador.getTabuleiro().getMapa().length* DIM_QUADRADO, i * 30);
 		}
+
 	}
 
 	public void alteraOrientacaoNavio() {
 		OrientacaoNavio orientacaoAntiga = orientacaoAtual;
-		orientacaoAtual = (orientacaoAtual == OrientacaoNavio.VERTICAL ? OrientacaoNavio.HORIZONTAL
-				: OrientacaoNavio.VERTICAL);
+
+		switch (orientacaoAtual) {
+		case VERTICAL:
+			orientacaoAtual = OrientacaoNavio.DIAGONAL;
+			break;
+
+		case HORIZONTAL:
+			orientacaoAtual = OrientacaoNavio.VERTICAL;
+			break;
+
+		case DIAGONAL:
+			orientacaoAtual = OrientacaoNavio.HORIZONTAL;
+			break;
+
+		default:
+			break;
+		}
 
 		jogador.getNavio(idNavioAtual).setOrientacao(orientacaoAtual);
 
@@ -146,14 +161,15 @@ public class PainelGrade extends JPanel {
 	}
 
 	public void adicionarNavio() {
-		if (idNavioAtual <= 32) { // Botão esquerdo?
+		if (idNavioAtual <= 128) { // Botão esquerdo?
 			try {
 				jogador.getTabuleiro().adicionaNavio(jogador.getNavio(idNavioAtual));
-				if (idNavioAtual == 32) {
-					jogador.getJogo().setEstado(TipoEstado.VEZ_JOG1);
+				if (idNavioAtual == 128) {
+					jogador.getJogo().setEstado(Estado.VEZ_JOG1);
 				} else
 					idNavioAtual *= 2;
 			} catch (NullPointerException npe) {
+				npe.printStackTrace();
 			}
 		}
 	}
@@ -165,13 +181,13 @@ public class PainelGrade extends JPanel {
 			int res = jogador.getOponente().atira(pos.x, pos.y);
 			repaint();
 			if (res == 1) {
-				jogador.getJogo().setEstado(TipoEstado.VEZ_JOG2);
+				jogador.getJogo().setEstado(Estado.VEZ_JOG2);
 				principal.tempoDeEspera();
 			} else if (res > 1) {
 				if (jogador.getNavio(res).estaDestruido()) {
 					principal.mostraEventos();
 				}
-				if (jogador.getJogo().getEstado() == TipoEstado.TERMINADO) {
+				if (jogador.getJogo().getEstado() == Estado.TERMINADO) {
 					principal.mostraEventos();
 				}
 			}

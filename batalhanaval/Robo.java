@@ -6,14 +6,7 @@ import java.util.ArrayList;
 import enuns.OrientacaoNavio;
 import navios.Navio;
 
-/**
- * Jogador automático, utilizando uma inteligência computacional
- * básica.
- * 
- * @param jogo O jogo atual
- * @author Darlan P. de Campos
- * @author Roger de Córdova Farias
- */
+
 public class Robo extends Jogador {
 	
 	private static final long serialVersionUID = 1L;

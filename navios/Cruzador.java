@@ -1,29 +1,26 @@
 package navios;
 
-import java.awt.Point;
-
-import enuns.TipoNavio;
 import batalhanaval.Jogador;
 
-public class BarcoPatrulha extends Navio{
+public class Cruzador extends Navio{
 
-	public BarcoPatrulha(Jogador jogador) {
+	public Cruzador(Jogador jogador) {
 		super(jogador);
 	}
-	
+
 	@Override
 	public String getNome() {
-		return "BarcoPatrulha";
+		return "Cruzador";
 	}
 
 	@Override
 	public int getTamanho() {
-		return 2;
+		return 3;
 	}
 
 	@Override
 	public int getId() {
-		return 2;
+		return 4;
 	}
 
 }

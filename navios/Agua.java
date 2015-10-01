@@ -2,26 +2,27 @@ package navios;
 
 import batalhanaval.Jogador;
 
-public class Encouracado extends Navio{
+public class Agua extends Navio{
+	
+	private static final long serialVersionUID = 1L;
 
-	public Encouracado(Jogador jogador) {
+	public Agua(Jogador jogador) {
 		super(jogador);
 	}
 
 	@Override
 	public String getNome() {
-		return "Encouracado";
+		return "agua";
 	}
 
 	@Override
 	public int getTamanho() {
-		return 4;
+		return 0;
 	}
 
 	@Override
 	public int getId() {
-		return 16;
+		return 1;
 	}
-
 
 }

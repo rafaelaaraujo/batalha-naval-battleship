@@ -41,11 +41,11 @@ public class Tabuleiro implements Serializable {
 	public boolean cabeNavio(Navio navio) {
 		try {
 			for (Point p : navio.getArrayPosicao()) {
-				if (p.x > mapa.length-1 || p.y > mapa[0].length-1|| mapa[p.x][p.y] > 1) {
+				if (p.x > mapa.length || p.y > mapa[0].length|| mapa[p.x][p.y] > 1) {
 					return false;				
 				}
 			}
-		} catch (NullPointerException e) {
+		} catch (Exception e) {
 			return false;
 		}
 		return true;

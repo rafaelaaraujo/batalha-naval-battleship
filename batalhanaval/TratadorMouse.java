@@ -6,29 +6,29 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
-import telas.PainelGrade;
-import enuns.TipoEstado;
+import telas.TelaTabuleiro;
+import enuns.Estado;
 import exceptions.PosicaoJaAtingidaException;
 
 public class TratadorMouse implements MouseListener, MouseMotionListener {
-	private PainelGrade painel;
+	private TelaTabuleiro painel;
 	private Jogador jogador;
 
-	public TratadorMouse(PainelGrade painel, Jogador jogador) {
+	public TratadorMouse(TelaTabuleiro painel, Jogador jogador) {
 		this.painel = painel;
 		this.jogador = jogador;
 	}
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		if (!(jogador instanceof Robo) && jogador.getJogo().getEstado() == TipoEstado.POSICIONANDO_NAVIOS) {
+		if (!(jogador instanceof Robo) && jogador.getJogo().getEstado() == Estado.POSICIONANDO_NAVIOS) {
 			if ((e.getModifiers() & InputEvent.BUTTON3_MASK) == InputEvent.BUTTON3_MASK) { // Botão direito?
 				painel.alteraOrientacaoNavio();
 
 			} else {
 				painel.adicionarNavio();
 			}
-		} else if (jogador.getJogo().getEstado() == TipoEstado.VEZ_JOG1&& (jogador instanceof Robo)) { // Jogo em andamento?
+		} else if (jogador.getJogo().getEstado() == Estado.VEZ_JOG1&& (jogador instanceof Robo)) { // Jogo em andamento?
 			painel.adicionarJogada();
 		}
 	}
@@ -38,7 +38,7 @@ public class TratadorMouse implements MouseListener, MouseMotionListener {
 		Point pos = painel.posicaoAtual;
 		if (pos.x != e.getX() / 30 || pos.y != e.getY() / 30) {
 			painel.posicaoAtual = new Point(e.getX() / 30, e.getY() / 30);
-			if (jogador.getJogo().getEstado() == TipoEstado.POSICIONANDO_NAVIOS && !(jogador instanceof Robo)) {
+			if (jogador.getJogo().getEstado() == Estado.POSICIONANDO_NAVIOS && !(jogador instanceof Robo)) {
 				painel.posicionarNavio(painel.posicaoAtual);
 			}
 		}

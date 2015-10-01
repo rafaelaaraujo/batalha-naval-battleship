@@ -1,6 +1,8 @@
 package batalhanaval;
 
-import telas.*;
+import telas.TelaPrincipal;
+
+
 
 public class Principal {
 
@@ -8,7 +10,7 @@ public class Principal {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		JanelaPrincipal principal = new JanelaPrincipal();
+		TelaPrincipal principal = new TelaPrincipal();
 		principal.pack();
 		principal.setVisible(true);
 	}

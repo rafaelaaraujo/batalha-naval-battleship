@@ -4,24 +4,17 @@ import java.awt.Point;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-import navios.BarcoPatrulha;
+import navios.Corveta;
+import navios.Cruzador;
 import navios.Destroier;
 import navios.Encouracado;
+import navios.Fragata;
 import navios.Navio;
 import navios.PortaAvioes;
 import navios.Submarino;
+import enuns.Estado;
 import enuns.OrientacaoNavio;
-import enuns.TipoEstado;
 import exceptions.PosicaoJaAtingidaException;
-
-/**
- * Jogador de batalha naval.
- * 
- * @param jogo
- * @author Darlan P. de Campos
- * @author Roger de Cordova Farias
- */
-
 public class Jogador implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -47,12 +40,14 @@ public class Jogador implements Serializable {
 	public Jogador(Jogo jogo) {
 		this.jogo = jogo;
 		this.tabuleiro = new Tabuleiro(); // Tabuleiro zerado
-
+		
+        frota.add(new Fragata(this));
+        frota.add(new Corveta(this));
         frota.add(new PortaAvioes(this));
         frota.add(new Encouracado(this));
         frota.add(new Submarino(this));
         frota.add(new Destroier(this));
-        frota.add(new BarcoPatrulha(this));
+        frota.add(new Cruzador(this));
 
         frotaRestante.addAll(frota);
         
@@ -97,13 +92,7 @@ public class Jogador implements Serializable {
 		}
 	}
 
-	/**
-	 * Posiciona e define a orientação de um navio no tabuleiro.
-	 * 
-	 * @param pos Posição do navio.
-	 * @param or Orientação (vertical ou horizontal).
-	 * @param id Identificador.
-	 */
+
 	public void posicionarNavio(Point pos, int id) {
 		getNavio(id).setPosicao(pos);
 		i = pos.x;
@@ -135,7 +124,7 @@ public class Jogador implements Serializable {
                 : "Você afundou o " + getNavio(id).getNome().toLowerCase() + " do adversário!" );
 		
 		if (frotaRestante.size() == 0)
-			jogo.setEstado(TipoEstado.TERMINADO);
+			jogo.setEstado(Estado.TERMINADO);
 	}
 
 	private void removerNavio(int id) {

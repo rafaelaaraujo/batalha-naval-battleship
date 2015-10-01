@@ -17,37 +17,20 @@ import javax.swing.Timer;
 
 import batalhanaval.Evento;
 import batalhanaval.Jogo;
-import enuns.TipoEstado;
+import enuns.Estado;
 
-/**
- * A janela principal da aplicação.
- * 
- * @param jogo
- * @author Darlan P. de Campos
- * @author Roger de Córdova Farias
- */
 
 @SuppressWarnings("serial")
-public class JanelaPrincipal extends JFrame {
+public class TelaPrincipal extends JFrame {
 	private Jogo jogo;
 
-	// Grades
-	private PainelGrade mapa1;
-	private PainelGrade mapa2;
-	private JRadioButtonMenuItem itemNivelFacil;
-	private JRadioButtonMenuItem itemNivelMedio;
-	private JRadioButtonMenuItem itemNivelDificil;
-	private JRadioButtonMenuItem itemNivelAtual; // Identifica o nível atual
-
+	private TelaTabuleiro mapa1;
+	private TelaTabuleiro mapa2;
 	private JTextArea caixaEventos;
 
 	private Timer temp;
-
-	// Versão do jogo
-	public static final float VERSAO = 1.1f;
-
 	
-	public JanelaPrincipal() {
+	public TelaPrincipal() {
 		
 		this.jogo = new Jogo();
 
@@ -57,18 +40,18 @@ public class JanelaPrincipal extends JFrame {
 
 		ActionListener fazJogada = new ActionListener() {
 			public void actionPerformed(ActionEvent evt) {
-				if (JanelaPrincipal.this.jogo.getEstado() == TipoEstado.VEZ_JOG2) {
-					int res = JanelaPrincipal.this.jogo.getJogador(1).atira();
+				if (TelaPrincipal.this.jogo.getEstado() == Estado.VEZ_JOG2) {
+					int res = TelaPrincipal.this.jogo.getJogador(1).atira();
 					mapa1.repaint();
 
 					if (res == 1) {
 						temp.stop();
-						JanelaPrincipal.this.jogo.setEstado(TipoEstado.VEZ_JOG1);
+						TelaPrincipal.this.jogo.setEstado(Estado.VEZ_JOG1);
 					} else if (res > 1) {
-						if (JanelaPrincipal.this.jogo.getEstado() == TipoEstado.TERMINADO) {
+						if (TelaPrincipal.this.jogo.getEstado() == Estado.TERMINADO) {
 							temp.stop();
 							mostraEventos();
-						} else if (JanelaPrincipal.this.jogo.getJogador(0)
+						} else if (TelaPrincipal.this.jogo.getJogador(0)
 								.getNavio(res).estaDestruido())
 							mostraEventos();
 					}
@@ -80,8 +63,6 @@ public class JanelaPrincipal extends JFrame {
 
 		adicionaCaixaEventos();
 		adicionaGrades();
-		adicionaMenus();
-
 	}
 
 
@@ -89,22 +70,12 @@ public class JanelaPrincipal extends JFrame {
 		JPanel mapas = new JPanel(new GridLayout(1, 2, 30, 10));
 		mapas.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-		mapa1 = new PainelGrade(this, this.jogo.getJogador(0), 0);
-		mapa2 = new PainelGrade(this, this.jogo.getJogador(1), 1);
+		mapa1 = new TelaTabuleiro(this, this.jogo.getJogador(0), 0);
+		mapa2 = new TelaTabuleiro(this, this.jogo.getJogador(1), 1);
 
 		mapas.add(mapa1);
 		mapas.add(mapa2);
 		getContentPane().add(mapas, BorderLayout.NORTH);
-	}
-
-	private void adicionaMenus() {
-
-		itemNivelAtual = itemNivelFacil;
-
-		ButtonGroup grupoNivel = new ButtonGroup();
-		grupoNivel.add(itemNivelFacil);
-		grupoNivel.add(itemNivelMedio);
-		grupoNivel.add(itemNivelDificil);
 	}
 
 
@@ -130,7 +101,7 @@ public class JanelaPrincipal extends JFrame {
 
 	public void mostraEvento(String msg) {
 		caixaEventos.append("> " + msg + "\n");
-		// Rolagem automática
+		// Rolagem automatica
 		caixaEventos.setCaretPosition(caixaEventos.getDocument().getLength());
 	}
 

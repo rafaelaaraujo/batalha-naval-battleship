@@ -3,16 +3,7 @@ package batalhanaval;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-import enuns.TipoEstado;
-
-
-/**
- * Jogo de batalha naval.
- * 
- * @author Darlan P. de Campos
- * @author Roger de Córdova Farias
- * 
- */
+import enuns.Estado;
 
 public class Jogo implements Serializable {
 
@@ -21,8 +12,7 @@ public class Jogo implements Serializable {
 
     private Jogador[] jogadores;
 
-    private int dificuldade;
-    private TipoEstado estado;
+    private Estado estado;
 
     // Fila de eventos
     private ArrayList<Evento> eventos;
@@ -34,13 +24,13 @@ public class Jogo implements Serializable {
 
         eventos = new ArrayList<Evento>();
 
-        setEstado(TipoEstado.POSICIONANDO_NAVIOS);
+		setEstado(Estado.POSICIONANDO_NAVIOS);
     }
 
-    public void setEstado(TipoEstado estado) {
-        if (estado == TipoEstado.POSICIONANDO_NAVIOS) {
+    public void setEstado(Estado estado) {
+        if (estado == Estado.POSICIONANDO_NAVIOS) {
             this.addEvento("Prepare-se! A batalha vai começar!");
-        } else if (estado == TipoEstado.TERMINADO) {
+        } else if (estado == Estado.TERMINADO) {
             if (this.getVencedor() == jogadores[0])
                 addEvento("A batalha terminou! Você foi derrotado!");
             else
@@ -58,17 +48,13 @@ public class Jogo implements Serializable {
     public Jogador getJogador(int i) {
         return jogadores[i];
     }
-
-    public int getDificuldade() {
-        return dificuldade;
-    }
-
-    public TipoEstado getEstado() {
+    
+    public Estado getEstado() {
         return estado;
     }
 
     public Jogador getVencedor () {
-        if (this.estado != TipoEstado.TERMINADO)
+        if (this.estado != Estado.TERMINADO)
             return null;
 
         return this.jogadores[0].getFrotaRestante().size() == 0
@@ -88,7 +74,6 @@ public class Jogo implements Serializable {
     /**
      * Remove e retorna o primeiro evento da fila.
      *
-     * @return Evento
      */
     public Evento getEvento () {
         if (eventos.size() > 0)

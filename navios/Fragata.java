@@ -2,26 +2,25 @@ package navios;
 
 import batalhanaval.Jogador;
 
-public class Encouracado extends Navio{
+public class Fragata extends Navio{
 
-	public Encouracado(Jogador jogador) {
+	public Fragata(Jogador jogador) {
 		super(jogador);
 	}
 
 	@Override
 	public String getNome() {
-		return "Encouracado";
+		return "Fragata";
 	}
 
 	@Override
 	public int getTamanho() {
-		return 4;
+		return 1;
 	}
 
 	@Override
 	public int getId() {
-		return 16;
+		return 32;
 	}
-
 
 }
