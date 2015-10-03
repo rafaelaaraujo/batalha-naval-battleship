@@ -1,8 +1,5 @@
 package navios;
 
-import java.awt.Point;
-
-import enuns.TipoNavio;
 import batalhanaval.Jogador;
 
 public class Destroier extends Navio{

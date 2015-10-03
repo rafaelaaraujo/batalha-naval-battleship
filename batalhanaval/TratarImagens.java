@@ -32,6 +32,10 @@ public class TratarImagens {
 			return getNavios(or).get(3);
 		case 32:
 			return getNavios(or).get(4);
+		case 64:
+			return getNavios(or).get(5);
+		case 128:
+			return getNavios(or).get(6);
 		default:
 			return null;
 		}
@@ -71,11 +75,12 @@ public class TratarImagens {
 
 	private void abreImagensNavios() {
 		try {
-			String nomeNavios[] = new String[] { "Cruzador", "Destroier",
-					"Submarino", "Encouracado", "PortaAvioes","Fragata","Corveta" };
+			String nomeNavios[] = new String[] { "Corveta", "Cruzador",
+					"Destroier", "Encouracado", "Fragata", "PortaAvioes",
+					"Submarino" };
 
 			imagensNaviosHorizonal = new ArrayList<Image>();
-			for (int i = 0; i < 5; i++) {
+			for (int i = 0; i < nomeNavios.length; i++) {
 				imagensNaviosVertical.add(i, getImagem(nomeNavios[i] + "V"));
 				imagensNaviosHorizonal.add(i, getImagem(nomeNavios[i] + "H"));
 				imagensNaviosDiagonal.add(i, getImagem(nomeNavios[i] + "D"));

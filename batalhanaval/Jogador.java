@@ -27,7 +27,6 @@ public class Jogador implements Serializable {
 	private ArrayList<Navio> frotaRestante = new ArrayList<Navio>();
 
 	private int i;
-
 	private int j;
 
 	/**
@@ -63,7 +62,7 @@ public class Jogador implements Serializable {
 	public int atira(int coluna, int linha) throws PosicaoJaAtingidaException{
 		int valorAtual = getOponente().getTabuleiro().getPosicao(coluna, linha);
 
-		if (valorAtual >= 1) {   // -1 posição atingida
+		if (valorAtual >= 1) {   // quando posição é atingida seu valor fica negativo 
 			tiros.add(new Point(coluna, linha));
 			getOponente().getTabuleiro().setPosicao(coluna, linha, -valorAtual); // coloca posicao como atingida
 			if (valorAtual > 1 && getOponente().getNavio(valorAtual).estaDestruido()) {

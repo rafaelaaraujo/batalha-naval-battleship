@@ -29,7 +29,7 @@ public class TelaTabuleiro extends JPanel {
 	private Image fundo;
 	private Dimension dim;
 
-	private int idNavioAtual;
+	private int idNavioAtual = 2;
 	private OrientacaoNavio orientacaoAtual;
 	public Point posicaoAtual;
 
