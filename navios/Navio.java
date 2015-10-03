@@ -54,14 +54,16 @@ public abstract class Navio implements Serializable {
 				i++;
 				break;
 			case DIAGONAL:
-				j++;
-				i++;
+				if (getTamanho() != 1) {
+					j++;
+					i++;
+				}
 				break;
 			default:
 				break;
 			}
 		}
-		
+
 		return arrayPos;
 	}
 
@@ -79,7 +81,7 @@ public abstract class Navio implements Serializable {
 
 	public boolean estaDestruido() {
 		for (Point p : getArrayPosicao()) {
-			if (jogador.getTabuleiro().getPosicao(p.x, p.y) > 0) {
+			if (jogador.getTabuleiro().getValorPosicao(p.x, p.y) > 0) {
 				return false;
 			}
 		}

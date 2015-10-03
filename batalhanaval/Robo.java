@@ -144,7 +144,7 @@ public class Robo extends Jogador {
 						// Verifica se acertou algum outro navio antes
 						while (naviosAcertados.size() > 0 && estado == ACERTOU_AGUA) {
 							Point pt = naviosAcertados.get(naviosAcertados.size()-1);
-							if (getOponente().getTabuleiro().getPosicao(pt.x, pt.y)
+							if (getOponente().getTabuleiro().getValorPosicao(pt.x, pt.y)
 									== -res) {
 								naviosAcertados.remove(naviosAcertados.size()-1);
 							} else {

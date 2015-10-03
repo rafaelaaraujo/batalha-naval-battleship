@@ -22,7 +22,7 @@ public class Submarino extends Navio {
 
 	@Override
 	public int getId() {
-		return 128;
+		return 6;
 	}
 
 }

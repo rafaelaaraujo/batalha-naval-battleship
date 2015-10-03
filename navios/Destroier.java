@@ -20,7 +20,7 @@ public class Destroier extends Navio{
 
 	@Override
 	public int getId() {
-		return 8;
+		return 4;
 	}
 
 }

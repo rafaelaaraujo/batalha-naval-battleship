@@ -20,7 +20,7 @@ public class Cruzador extends Navio{
 
 	@Override
 	public int getId() {
-		return 4;
+		return 5;
 	}
 
 }

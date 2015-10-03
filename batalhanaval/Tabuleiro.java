@@ -71,13 +71,8 @@ public class Tabuleiro implements Serializable {
 		return mapa;
 	}
 
-	/**
-	 * Retorna uma posição do tabuleiro.
-	 * 
-	 * @param x Coluna
-	 * @param y Linha
-	 */
-	public int getPosicao(int x, int y) {
+
+	public int getValorPosicao(int x, int y) {
 		return mapa[x][y];
 	}
 

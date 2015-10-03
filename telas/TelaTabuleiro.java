@@ -21,6 +21,8 @@ import batalhanaval.*;
 
 @SuppressWarnings("serial")
 public class TelaTabuleiro extends JPanel {
+	
+	private static final int TOTAL_NAVIOS = 8;
 	public static final int DIM_QUADRADO = 30;
 
 	private TelaPrincipal principal;
@@ -91,7 +93,7 @@ public class TelaTabuleiro extends JPanel {
 	private void desenhaTiros(Graphics g) {
 		try {
 			for (Point pt : jogador.getOponente().getTiros()) {
-				int valor = jogador.getTabuleiro().getPosicao(pt.x, pt.y);
+				int valor = jogador.getTabuleiro().getValorPosicao(pt.x, pt.y);
 				if (valor == -1) {
 
 					g.drawImage(tratarImagens.getImagemAgua(), pt.x * 30,
@@ -121,12 +123,11 @@ public class TelaTabuleiro extends JPanel {
 	private void desenhaTabuleiro(Graphics g) {
 		g.drawImage(fundo, 0, 0, null);
 		g.setColor(Color.BLUE);
-		g.drawRect(0, 0, this.getWidth() - 2, this.getHeight() - 2);
+		g.drawRect(0, 0, this.getWidth() - 1, this.getHeight() - 1);
 		
 		for (int i = 1; i < 20; i++) {
-			g.drawLine(i * 30, 0, i * 30,
-					jogador.getTabuleiro().getMapa().length * DIM_QUADRADO);
-			g.drawLine(0, i * 30, jogador.getTabuleiro().getMapa().length* DIM_QUADRADO, i * 30);
+			g.drawLine(i * 30, 0, i * 30,jogador.getTabuleiro().getMapa().length * DIM_QUADRADO); // linha horizontal
+			g.drawLine(0, i * 30, jogador.getTabuleiro().getMapa().length* DIM_QUADRADO, i * 30); // linha vertical
 		}
 
 	}
@@ -134,14 +135,16 @@ public class TelaTabuleiro extends JPanel {
 	public void alteraOrientacaoNavio() {
 		OrientacaoNavio orientacaoAntiga = orientacaoAtual;
 
-		switch (orientacaoAtual) {
-		case VERTICAL:
-			orientacaoAtual = OrientacaoNavio.DIAGONAL;
-			break;
+		switch (orientacaoAntiga) {
 
 		case HORIZONTAL:
 			orientacaoAtual = OrientacaoNavio.VERTICAL;
 			break;
+			
+		case VERTICAL:
+			orientacaoAtual = OrientacaoNavio.DIAGONAL;
+			break;
+
 
 		case DIAGONAL:
 			orientacaoAtual = OrientacaoNavio.HORIZONTAL;
@@ -152,22 +155,17 @@ public class TelaTabuleiro extends JPanel {
 		}
 
 		jogador.getNavio(idNavioAtual).setOrientacao(orientacaoAtual);
-
-		if (!jogador.getTabuleiro().cabeNavio(jogador.getNavio(idNavioAtual))) {
-			jogador.getNavio(idNavioAtual).setOrientacao(orientacaoAntiga);
-		}
-
 		repaint();
 	}
 
 	public void adicionarNavio() {
-		if (idNavioAtual <= 128) { // Botão esquerdo?
+		if (idNavioAtual <= TOTAL_NAVIOS) {
 			try {
 				jogador.getTabuleiro().adicionaNavio(jogador.getNavio(idNavioAtual));
-				if (idNavioAtual == 128) {
+				if (idNavioAtual == TOTAL_NAVIOS) {
 					jogador.getJogo().setEstado(Estado.VEZ_JOG1);
 				} else
-					idNavioAtual *= 2;
+					idNavioAtual ++;
 			} catch (NullPointerException npe) {
 				npe.printStackTrace();
 			}

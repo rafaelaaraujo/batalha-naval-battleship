@@ -60,7 +60,7 @@ public class Jogador implements Serializable {
 	 * @param coluna
 	 */
 	public int atira(int coluna, int linha) throws PosicaoJaAtingidaException{
-		int valorAtual = getOponente().getTabuleiro().getPosicao(coluna, linha);
+		int valorAtual = getOponente().getTabuleiro().getValorPosicao(coluna, linha);
 
 		if (valorAtual >= 1) {   // quando posição é atingida seu valor fica negativo 
 			tiros.add(new Point(coluna, linha));

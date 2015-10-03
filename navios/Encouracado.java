@@ -15,12 +15,12 @@ public class Encouracado extends Navio{
 
 	@Override
 	public int getTamanho() {
-		return 4;
+		return 5;
 	}
 
 	@Override
 	public int getId() {
-		return 16;
+		return 7;
 	}
 
 
