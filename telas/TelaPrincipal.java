@@ -88,8 +88,7 @@ public class TelaPrincipal extends JFrame {
 
 		JPanel painelEventos = new JPanel(new GridLayout(1, 1));
 		painelEventos.setPreferredSize(new Dimension(630, 150));
-		painelEventos
-				.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+		painelEventos.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
 		caixaEventos = new JTextArea();
 		JScrollPane rolagemEventos = new JScrollPane(caixaEventos);

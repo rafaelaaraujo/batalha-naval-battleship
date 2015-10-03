@@ -21,7 +21,9 @@ public class TratarImagens {
 	}
 
 	public Image getImagemNavio(int tipoNavio, OrientacaoNavio or) {
-		return getNavios(or).get(tipoNavio - 2);
+		
+			return getNavios(or).get(tipoNavio - 2);
+
 	}
 
 	private ArrayList<Image> getNavios(OrientacaoNavio on) {

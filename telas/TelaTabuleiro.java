@@ -3,8 +3,10 @@ package telas;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
+import java.awt.Toolkit;
 import java.awt.event.InputEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -92,16 +94,19 @@ public class TelaTabuleiro extends JPanel {
 
 	private void desenhaTiros(Graphics g) {
 		try {
+			Graphics2D g2 = (Graphics2D) g;
+
+		    
 			for (Point pt : jogador.getOponente().getTiros()) {
 				int valor = jogador.getTabuleiro().getValorPosicao(pt.x, pt.y);
 				if (valor == -1) {
 
-					g.drawImage(tratarImagens.getImagemAgua(), pt.x * 30,
-							pt.y * 30, null);
+					g2.drawImage(tratarImagens.getImagemAgua(), pt.x * 30,
+							pt.y * 30, this);
 
 				} else if (valor < 0) {
-					g.drawImage(tratarImagens.getImagemFogo(), pt.x * 30,
-							pt.y * 30, null);
+					g2.drawImage(tratarImagens.getImagemFogo(), pt.x * 30,
+							pt.y * 30, this);
 				}
 			}
 		} catch (IOException e) {

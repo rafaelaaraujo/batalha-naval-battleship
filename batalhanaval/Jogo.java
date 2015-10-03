@@ -40,11 +40,7 @@ public class Jogo implements Serializable {
         this.estado = estado;
     }
 
-    /**
-     * 
-     * @param i
-     * @return O jogador indicado por <code>i</code>
-     */
+    
     public Jogador getJogador(int i) {
         return jogadores[i];
     }
