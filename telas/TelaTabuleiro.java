@@ -6,11 +6,6 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
-import java.awt.Toolkit;
-import java.awt.event.InputEvent;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
 import java.io.IOException;
 
 import javax.swing.JPanel;
@@ -38,6 +33,8 @@ public class TelaTabuleiro extends JPanel {
 	public Point posicaoAtual;
 
 	private boolean mostrarNavios;
+	
+	private TratadorMouse tm;
 
 	public TelaTabuleiro(TelaPrincipal p, Jogador j, int tipoMar) {
 		principal = p;
@@ -68,9 +65,8 @@ public class TelaTabuleiro extends JPanel {
 							+ "Para mudar a orientação, clique com o botão direito.");
 		}
 
-		TratadorMouse tm = new TratadorMouse(this, jogador);
-		addMouseListener(tm);
-		addMouseMotionListener(tm);
+		tm = new TratadorMouse(this, jogador);
+		addMouseListeners();
 
 		// Mostrar navios?
 		mostrarNavios = (jogador.getOponente() instanceof Robo ? true : false);
@@ -80,6 +76,7 @@ public class TelaTabuleiro extends JPanel {
 		this.jogador = j;
 		idNavioAtual = 2;
 		repaint();
+		addMouseListeners();
 	}
 
 	@Override
@@ -208,6 +205,16 @@ public class TelaTabuleiro extends JPanel {
 			jogador.getNavio(idNavioAtual).setPosicao(posAntiga);
 		}
 
+	}
+	
+	private void addMouseListeners() {
+		addMouseListener(tm);
+		addMouseMotionListener(tm);
+	}
+	
+	public void removeMouseListeners() {
+		removeMouseListener(tm);
+		removeMouseMotionListener(tm);
 	}
 
 }

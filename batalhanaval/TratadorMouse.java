@@ -1,14 +1,12 @@
 package batalhanaval;
 
 import java.awt.Point;
-import java.awt.event.InputEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
 import telas.TelaTabuleiro;
 import enuns.Estado;
-import exceptions.PosicaoJaAtingidaException;
 
 public class TratadorMouse implements MouseListener, MouseMotionListener {
 	private TelaTabuleiro painel;
