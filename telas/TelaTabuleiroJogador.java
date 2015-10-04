@@ -80,7 +80,8 @@ public class TelaTabuleiroJogador extends JPanel {
 		try {
 			Graphics2D g2 = (Graphics2D) g;
 
-			for (Point pt : jogador.getTiros()) {
+			for (Point pt : principal.servidor.getOponente(jogador.getId())
+					.getTiros()) {
 				int valor = jogador.getTabuleiro().getValorPosicao(pt.x, pt.y);
 				if (valor == -1) {
 
