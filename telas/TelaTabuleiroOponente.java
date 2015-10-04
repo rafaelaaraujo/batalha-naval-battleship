@@ -75,7 +75,7 @@ public class TelaTabuleiroOponente extends JPanel {
 		try {
 			Graphics2D g2 = (Graphics2D) g;
 		    
-			for (Point pt : principal.servidor.getTiros(oponente.getId())) {
+			for (Point pt : principal.servidor.getOponente(oponente.getId()).getTiros()) {
 				int valor = oponente.getTabuleiro().getValorPosicao(pt.x, pt.y);
 				if (valor == -1) {
 
