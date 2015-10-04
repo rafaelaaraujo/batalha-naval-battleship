@@ -7,6 +7,7 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
 import java.io.IOException;
+import java.rmi.RemoteException;
 
 import javax.swing.JPanel;
 
@@ -35,11 +36,11 @@ public class TelaTabuleiroJogador extends JPanel {
 
 	private TratadorMouseJogador tm;
 
-	public TelaTabuleiroJogador(TelaPrincipal p, Jogador j, int tipoMar) {
+	public TelaTabuleiroJogador(TelaPrincipal p, Jogador j) {
 		principal = p;
 		jogador = j;
 		try {
-			fundo = tratarImagens.getImagemMar(tipoMar);
+			fundo = tratarImagens.getImagemMar(0);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -79,7 +80,7 @@ public class TelaTabuleiroJogador extends JPanel {
 		try {
 			Graphics2D g2 = (Graphics2D) g;
 
-			for (Point pt : jogador.getOponente().getTiros()) {
+			for (Point pt : jogador.getTiros()) {
 				int valor = jogador.getTabuleiro().getValorPosicao(pt.x, pt.y);
 				if (valor == -1) {
 
@@ -166,7 +167,7 @@ public class TelaTabuleiroJogador extends JPanel {
 		Point pos = posicaoAtual;
 
 		try {
-			int res = jogador.getOponente().atira(pos.x, pos.y);
+			int res = principal.servidor.atira(jogador.getId(), pos.x, pos.y);
 			repaint();
 			if (res == 1) {
 				principal.setEstadoJogo(Estado.VEZ_JOG2);
@@ -181,6 +182,8 @@ public class TelaTabuleiroJogador extends JPanel {
 			}
 		} catch (PosicaoJaAtingidaException ex) {
 			principal.mostraEvento(ex.getMessage());
+		} catch (RemoteException e) {
+			e.printStackTrace();
 		}
 	}
 

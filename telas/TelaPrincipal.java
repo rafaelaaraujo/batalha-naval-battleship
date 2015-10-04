@@ -63,7 +63,11 @@ public class TelaPrincipal extends JFrame {
 		 */
 
 		adicionaCaixaEventos();
-		adicionaGrades();
+		try {
+			adicionaGrades();
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public Estado getEstadoJogo() {
@@ -83,22 +87,18 @@ public class TelaPrincipal extends JFrame {
 		}
 	}
 
-	private void adicionaGrades() {
+	private void adicionaGrades() throws RemoteException {
 		JPanel mapas = new JPanel(new GridLayout(1, 2, 30, 10));
 		mapas.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-		mapa1 = new TelaTabuleiroJogador(this, jogador, 0);
-		try {
-			mapa2 = new TelaTabuleiroOponente(this,
-					servidor.getOponente(jogador.getId()), 1);
-		} catch (RemoteException e) {
-			e.printStackTrace();
-		}
+		mapa1 = new TelaTabuleiroJogador(this, jogador);
+		mapa2 = new TelaTabuleiroOponente(this, servidor.getOponente(jogador.getId()));
 
 		mapas.add(mapa1);
 		mapas.add(mapa2);
 		getContentPane().add(mapas, BorderLayout.NORTH);
 	}
+	
 
 	public void atualizaGrades() {
 		mapa1.repaint();

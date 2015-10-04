@@ -17,6 +17,7 @@ import enuns.Estado;
 import eventos.TratadorMouseOponente;
 import eventos.TratadorMouseJogador;
 import exceptions.PosicaoJaAtingidaException;
+import Server.Servidor;
 import batalhanaval.*;
 
 @SuppressWarnings("serial")
@@ -27,7 +28,6 @@ public class TelaTabuleiroOponente extends JPanel {
 
 	public TelaPrincipal principal;
 	private TratarImagens tratarImagens = new TratarImagens();
-	private Jogador jogador;
 	private Image fundo;
 	private Dimension dim;
 
@@ -35,19 +35,18 @@ public class TelaTabuleiroOponente extends JPanel {
 	public Point posicaoAtual;
 	
 	private TratadorMouseOponente tm;
+	private Jogador oponente;
 
-	public TelaTabuleiroOponente(TelaPrincipal p, Jogador j, int tipoMar) {
+	public TelaTabuleiroOponente(TelaPrincipal p, Jogador jogador) {
+		this.oponente = jogador;
 		principal = p;
-		jogador = j;
 		try {
-			fundo = tratarImagens.getImagemMar(tipoMar);
+			fundo = tratarImagens.getImagemMar(1);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 
-		dim = new Dimension(jogador.getTabuleiro().getMapa().length
-				* DIM_QUADRADO, jogador.getTabuleiro().getMapa()[0].length
-				* DIM_QUADRADO);
+		dim = new Dimension(jogador.getTabuleiro().getMapa().length* DIM_QUADRADO, jogador.getTabuleiro().getMapa()[0].length* DIM_QUADRADO);
 		setPreferredSize(dim);
 
 		// Quadrado onde o ponteiro está
@@ -76,8 +75,8 @@ public class TelaTabuleiroOponente extends JPanel {
 		try {
 			Graphics2D g2 = (Graphics2D) g;
 		    
-			for (Point pt : principal.servidor.getTiros()) {
-				int valor = jogador.getTabuleiro().getValorPosicao(pt.x, pt.y);
+			for (Point pt : principal.servidor.getTiros(oponente.getId())) {
+				int valor = oponente.getTabuleiro().getValorPosicao(pt.x, pt.y);
 				if (valor == -1) {
 
 					g2.drawImage(tratarImagens.getImagemAgua(), pt.x * 30,
@@ -94,7 +93,7 @@ public class TelaTabuleiroOponente extends JPanel {
 	}
 
 	private void desenhaFrota(Graphics g) {
-		for (Navio navio : jogador.getFrota()) {
+		for (Navio navio : oponente.getFrota()) {
 			if (navio.getPosicao() != null)
 				if (navio.estaDestruido())
 					g.drawImage(
@@ -110,8 +109,8 @@ public class TelaTabuleiroOponente extends JPanel {
 		g.drawRect(0, 0, this.getWidth() - 1, this.getHeight() - 1);
 		
 		for (int i = 1; i < 20; i++) {
-			g.drawLine(i * 30, 0, i * 30,jogador.getTabuleiro().getMapa().length * DIM_QUADRADO); // linha horizontal
-			g.drawLine(0, i * 30, jogador.getTabuleiro().getMapa().length* DIM_QUADRADO, i * 30); // linha vertical
+			g.drawLine(i * 30, 0, i * 30,oponente.getTabuleiro().getMapa().length * DIM_QUADRADO); // linha horizontal
+			g.drawLine(0, i * 30, oponente.getTabuleiro().getMapa().length* DIM_QUADRADO, i * 30); // linha vertical
 		}
 
 	}
@@ -119,7 +118,7 @@ public class TelaTabuleiroOponente extends JPanel {
 	public void adicionarNavio() {
 		if (idNavioAtual <= TOTAL_NAVIOS) {
 			try {
-				jogador.getTabuleiro().adicionaNavio(jogador.getNavio(idNavioAtual));
+				oponente.getTabuleiro().adicionaNavio(oponente.getNavio(idNavioAtual));
 				if (idNavioAtual == TOTAL_NAVIOS) {
 					principal.setEstadoJogo(Estado.VEZ_JOG1);
 				} else
@@ -134,13 +133,13 @@ public class TelaTabuleiroOponente extends JPanel {
 		Point pos = posicaoAtual;
 
 		try {
-			int res = principal.servidor.atira(jogador.getId(),pos.x, pos.y);
+			int res = principal.servidor.atira(oponente.getId(),pos.x, pos.y);
 			repaint();
 			if (res == 1) {
 				principal.setEstadoJogo(Estado.VEZ_JOG2);
 				principal.tempoDeEspera();
 			} else if (res > 1) {
-				if (jogador.getNavio(res).estaDestruido()) {
+				if (oponente.getNavio(res).estaDestruido()) {
 					principal.mostraEventos();
 				}
 				if (principal.getEstadoJogo() == Estado.TERMINADO) {
@@ -152,9 +151,6 @@ public class TelaTabuleiroOponente extends JPanel {
 		}
 	}
 
-	
-	
-	
 	private void addMouseListeners() {
 		addMouseListener(tm);
 		addMouseMotionListener(tm);
