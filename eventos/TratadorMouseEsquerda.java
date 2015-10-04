@@ -1,18 +1,20 @@
-package batalhanaval;
+package eventos;
 
 import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
-import telas.TelaTabuleiro;
+import batalhanaval.Jogador;
+import telas.TelaTabuleiroDireita;
+import telas.TelaTabuleiroEsquerda;
 import enuns.Estado;
 
-public class TratadorMouse implements MouseListener, MouseMotionListener {
-	private TelaTabuleiro painel;
+public class TratadorMouseEsquerda implements MouseListener, MouseMotionListener {
+	private TelaTabuleiroEsquerda painel;
 	private Jogador jogador;
 
-	public TratadorMouse(TelaTabuleiro painel, Jogador jogador) {
+	public TratadorMouseEsquerda(TelaTabuleiroEsquerda painel, Jogador jogador) {
 		this.painel = painel;
 		this.jogador = jogador;
 	}
@@ -26,8 +28,6 @@ public class TratadorMouse implements MouseListener, MouseMotionListener {
 			} else {
 				painel.adicionarNavio();
 			}
-		} else if (jogador.getJogo().getEstado() == Estado.VEZ_JOG1) { // Jogo em andamento
-			painel.adicionarJogada();
 		}
 	}
 

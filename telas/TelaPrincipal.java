@@ -13,17 +13,17 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.Timer;
 
-import batalhanaval.Evento;
 import batalhanaval.Jogo;
 import enuns.Estado;
+import eventos.Evento;
 
 
 @SuppressWarnings("serial")
 public class TelaPrincipal extends JFrame {
 	private Jogo jogo;
 
-	private TelaTabuleiro mapa1;
-	private TelaTabuleiro mapa2;
+	private TelaTabuleiroEsquerda mapa1;
+	private TelaTabuleiroDireita mapa2;
 	private JTextArea caixaEventos;
 
 	private Timer temp;
@@ -68,8 +68,8 @@ public class TelaPrincipal extends JFrame {
 		JPanel mapas = new JPanel(new GridLayout(1, 2, 30, 10));
 		mapas.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-		mapa1 = new TelaTabuleiro(this, this.jogo.getJogador(0), 0);
-		mapa2 = new TelaTabuleiro(this, this.jogo.getJogador(1), 1);
+		mapa1 = new TelaTabuleiroEsquerda(this, this.jogo.getJogador(0), 0);
+		mapa2 = new TelaTabuleiroDireita(this, this.jogo.getJogador(1), 1);
 
 		mapas.add(mapa1);
 		mapas.add(mapa2);

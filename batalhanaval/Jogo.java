@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 import enuns.Estado;
+import eventos.Evento;
 
 public class Jogo implements Serializable {
 

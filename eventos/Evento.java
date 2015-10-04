@@ -1,4 +1,4 @@
-package batalhanaval;
+package eventos;
 
 public class Evento {
    private String mensagem;

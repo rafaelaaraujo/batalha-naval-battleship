@@ -13,11 +13,13 @@ import javax.swing.JPanel;
 import navios.Navio;
 import enuns.OrientacaoNavio;
 import enuns.Estado;
+import eventos.TratadorMouseDireita;
+import eventos.TratadorMouseEsquerda;
 import exceptions.PosicaoJaAtingidaException;
 import batalhanaval.*;
 
 @SuppressWarnings("serial")
-public class TelaTabuleiro extends JPanel {
+public class TelaTabuleiroDireita extends JPanel {
 	
 	private static final int TOTAL_NAVIOS = 8;
 	public static final int DIM_QUADRADO = 30;
@@ -29,14 +31,11 @@ public class TelaTabuleiro extends JPanel {
 	private Dimension dim;
 
 	private int idNavioAtual = 2;
-	private OrientacaoNavio orientacaoAtual;
 	public Point posicaoAtual;
-
-	private boolean mostrarNavios;
 	
-	private TratadorMouse tm;
+	private TratadorMouseDireita tm;
 
-	public TelaTabuleiro(TelaPrincipal p, Jogador j, int tipoMar) {
+	public TelaTabuleiroDireita(TelaPrincipal p, Jogador j, int tipoMar) {
 		principal = p;
 		jogador = j;
 		try {
@@ -54,28 +53,11 @@ public class TelaTabuleiro extends JPanel {
 		posicaoAtual = new Point(0, 0);
 
 		// Atual navio sendo posicionado
-		if (!(jogador instanceof Robo)) {
-			idNavioAtual = 2;
-			orientacaoAtual = OrientacaoNavio.HORIZONTAL;
 			jogador.getNavio(idNavioAtual).setPosicao(posicaoAtual);
-			principal.mostraEventos();
-			principal
-					.mostraEvento("Movimente o navio com o mouse e clique com o "
-							+ "botão esquerdo para posicioná-lo.\n"
-							+ "Para mudar a orientação, clique com o botão direito.");
-		}
+		principal.mostraEventos();
+		
 
-		tm = new TratadorMouse(this, jogador);
-		addMouseListeners();
-
-		// Mostrar navios?
-		mostrarNavios = (jogador.getOponente() instanceof Robo ? true : false);
-	}
-
-	public void reset(Jogador j) {
-		this.jogador = j;
-		idNavioAtual = 2;
-		repaint();
+		tm = new TratadorMouseDireita(this, jogador);
 		addMouseListeners();
 	}
 
@@ -92,7 +74,6 @@ public class TelaTabuleiro extends JPanel {
 	private void desenhaTiros(Graphics g) {
 		try {
 			Graphics2D g2 = (Graphics2D) g;
-
 		    
 			for (Point pt : jogador.getOponente().getTiros()) {
 				int valor = jogador.getTabuleiro().getValorPosicao(pt.x, pt.y);
@@ -114,7 +95,7 @@ public class TelaTabuleiro extends JPanel {
 	private void desenhaFrota(Graphics g) {
 		for (Navio navio : jogador.getFrota()) {
 			if (navio.getPosicao() != null)
-				if (mostrarNavios || navio.estaDestruido())
+				if (navio.estaDestruido())
 					g.drawImage(
 							tratarImagens.getImagemNavio(navio.getId(),navio.getOrientacao()),
 							navio.getPosicao().x * 30,
@@ -132,32 +113,6 @@ public class TelaTabuleiro extends JPanel {
 			g.drawLine(0, i * 30, jogador.getTabuleiro().getMapa().length* DIM_QUADRADO, i * 30); // linha vertical
 		}
 
-	}
-
-	public void alteraOrientacaoNavio() {
-		OrientacaoNavio orientacaoAntiga = orientacaoAtual;
-
-		switch (orientacaoAntiga) {
-
-		case HORIZONTAL:
-			orientacaoAtual = OrientacaoNavio.VERTICAL;
-			break;
-			
-		case VERTICAL:
-			orientacaoAtual = OrientacaoNavio.DIAGONAL;
-			break;
-
-
-		case DIAGONAL:
-			orientacaoAtual = OrientacaoNavio.HORIZONTAL;
-			break;
-
-		default:
-			break;
-		}
-
-		jogador.getNavio(idNavioAtual).setOrientacao(orientacaoAtual);
-		repaint();
 	}
 
 	public void adicionarNavio() {
@@ -196,16 +151,6 @@ public class TelaTabuleiro extends JPanel {
 		}
 	}
 
-	public void posicionarNavio(Point posicaoAtual2) {
-		Point posAntiga = jogador.getNavio(idNavioAtual).getPosicao();
-		jogador.getNavio(idNavioAtual).setPosicao(posicaoAtual2);
-		if (jogador.getTabuleiro().cabeNavio(jogador.getNavio(idNavioAtual))) {
-			repaint();
-		} else {
-			jogador.getNavio(idNavioAtual).setPosicao(posAntiga);
-		}
-
-	}
 	
 	private void addMouseListeners() {
 		addMouseListener(tm);
