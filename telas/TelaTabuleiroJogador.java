@@ -172,7 +172,7 @@ public class TelaTabuleiroJogador extends JPanel {
 			repaint();
 			if (res == 1) {
 				principal.setEstadoJogo(Estado.VEZ_JOG2);
-				principal.tempoDeEspera();
+				//principal.tempoDeEspera();
 			} else if (res > 1) {
 				if (jogador.getNavio(res).estaDestruido()) {
 					principal.mostraEventos();

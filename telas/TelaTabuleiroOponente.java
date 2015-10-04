@@ -57,7 +57,7 @@ public class TelaTabuleiroOponente extends JPanel {
 		principal.mostraEventos();
 		
 
-		tm = new TratadorMouseOponente(this, jogador);
+		tm = new TratadorMouseOponente(this, oponente);
 		addMouseListeners();
 	}
 
@@ -137,7 +137,7 @@ public class TelaTabuleiroOponente extends JPanel {
 			repaint();
 			if (res == 1) {
 				principal.setEstadoJogo(Estado.VEZ_JOG2);
-				principal.tempoDeEspera();
+				//principal.tempoDeEspera();
 			} else if (res > 1) {
 				if (oponente.getNavio(res).estaDestruido()) {
 					principal.mostraEventos();
