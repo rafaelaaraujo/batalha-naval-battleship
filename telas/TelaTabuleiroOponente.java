@@ -13,13 +13,13 @@ import javax.swing.JPanel;
 import navios.Navio;
 import enuns.OrientacaoNavio;
 import enuns.Estado;
-import eventos.TratadorMouseDireita;
-import eventos.TratadorMouseEsquerda;
+import eventos.TratadorMouseOponente;
+import eventos.TratadorMouseJogador;
 import exceptions.PosicaoJaAtingidaException;
 import batalhanaval.*;
 
 @SuppressWarnings("serial")
-public class TelaTabuleiroDireita extends JPanel {
+public class TelaTabuleiroOponente extends JPanel {
 	
 	private static final int TOTAL_NAVIOS = 8;
 	public static final int DIM_QUADRADO = 30;
@@ -33,9 +33,9 @@ public class TelaTabuleiroDireita extends JPanel {
 	private int idNavioAtual = 2;
 	public Point posicaoAtual;
 	
-	private TratadorMouseDireita tm;
+	private TratadorMouseOponente tm;
 
-	public TelaTabuleiroDireita(TelaPrincipal p, Jogador j, int tipoMar) {
+	public TelaTabuleiroOponente(TelaPrincipal p, Jogador j, int tipoMar) {
 		principal = p;
 		jogador = j;
 		try {
@@ -57,7 +57,7 @@ public class TelaTabuleiroDireita extends JPanel {
 		principal.mostraEventos();
 		
 
-		tm = new TratadorMouseDireita(this, jogador);
+		tm = new TratadorMouseOponente(this, jogador);
 		addMouseListeners();
 	}
 

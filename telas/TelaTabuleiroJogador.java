@@ -13,12 +13,12 @@ import javax.swing.JPanel;
 import navios.Navio;
 import enuns.OrientacaoNavio;
 import enuns.Estado;
-import eventos.TratadorMouseEsquerda;
+import eventos.TratadorMouseJogador;
 import exceptions.PosicaoJaAtingidaException;
 import batalhanaval.*;
 
 @SuppressWarnings("serial")
-public class TelaTabuleiroEsquerda extends JPanel {
+public class TelaTabuleiroJogador extends JPanel {
 
 	private static final int TOTAL_NAVIOS = 8;
 	public static final int DIM_QUADRADO = 30;
@@ -33,9 +33,9 @@ public class TelaTabuleiroEsquerda extends JPanel {
 	private OrientacaoNavio orientacaoAtual;
 	public Point posicaoAtual;
 
-	private TratadorMouseEsquerda tm;
+	private TratadorMouseJogador tm;
 
-	public TelaTabuleiroEsquerda(TelaPrincipal p, Jogador j, int tipoMar) {
+	public TelaTabuleiroJogador(TelaPrincipal p, Jogador j, int tipoMar) {
 		principal = p;
 		jogador = j;
 		try {
@@ -61,7 +61,7 @@ public class TelaTabuleiroEsquerda extends JPanel {
 				+ "botão esquerdo para posicioná-lo.\n"
 				+ "Para mudar a orientação, clique com o botão direito.");
 
-		tm = new TratadorMouseEsquerda(this, jogador);
+		tm = new TratadorMouseJogador(this, jogador);
 		addMouseListeners();
 	}
 

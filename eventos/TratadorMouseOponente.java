@@ -6,15 +6,15 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
 import batalhanaval.Jogador;
-import telas.TelaTabuleiroDireita;
-import telas.TelaTabuleiroEsquerda;
+import telas.TelaTabuleiroOponente;
+import telas.TelaTabuleiroJogador;
 import enuns.Estado;
 
-public class TratadorMouseDireita implements MouseListener, MouseMotionListener {
-	private TelaTabuleiroDireita painel;
+public class TratadorMouseOponente implements MouseListener, MouseMotionListener {
+	private TelaTabuleiroOponente painel;
 	private Jogador jogador;
 
-	public TratadorMouseDireita(TelaTabuleiroDireita painel, Jogador jogador) {
+	public TratadorMouseOponente(TelaTabuleiroOponente painel, Jogador jogador) {
 		this.painel = painel;
 		this.jogador = jogador;
 	}
