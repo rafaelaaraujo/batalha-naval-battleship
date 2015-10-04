@@ -23,7 +23,7 @@ public class TelaTabuleiroJogador extends JPanel {
 	private static final int TOTAL_NAVIOS = 8;
 	public static final int DIM_QUADRADO = 30;
 
-	private TelaPrincipal principal;
+	public TelaPrincipal principal;
 	private TratarImagens tratarImagens = new TratarImagens();
 	private Jogador jogador;
 	private Image fundo;
@@ -153,7 +153,7 @@ public class TelaTabuleiroJogador extends JPanel {
 				jogador.getTabuleiro().adicionaNavio(
 						jogador.getNavio(idNavioAtual));
 				if (idNavioAtual == TOTAL_NAVIOS) {
-					jogador.getJogo().setEstado(Estado.VEZ_JOG1);
+					principal.setEstadoJogo(Estado.VEZ_JOG1);
 				} else
 					idNavioAtual++;
 			} catch (NullPointerException npe) {
@@ -169,13 +169,13 @@ public class TelaTabuleiroJogador extends JPanel {
 			int res = jogador.getOponente().atira(pos.x, pos.y);
 			repaint();
 			if (res == 1) {
-				jogador.getJogo().setEstado(Estado.VEZ_JOG2);
+				principal.setEstadoJogo(Estado.VEZ_JOG2);
 				principal.tempoDeEspera();
 			} else if (res > 1) {
 				if (jogador.getNavio(res).estaDestruido()) {
 					principal.mostraEventos();
 				}
-				if (jogador.getJogo().getEstado() == Estado.TERMINADO) {
+				if (principal.getEstadoJogo() == Estado.TERMINADO) {
 					principal.mostraEventos();
 				}
 			}

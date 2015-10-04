@@ -5,77 +5,104 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.rmi.RemoteException;
 
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.Timer;
 
+import Server.Servidor;
+import Server.ServidorImpl;
+import batalhanaval.Jogador;
 import batalhanaval.Jogo;
 import enuns.Estado;
 import eventos.Evento;
 
-
 @SuppressWarnings("serial")
 public class TelaPrincipal extends JFrame {
-	private Jogo jogo;
 
 	private TelaTabuleiroJogador mapa1;
 	private TelaTabuleiroOponente mapa2;
 	private JTextArea caixaEventos;
+	public Servidor servidor;
+	private Jogador jogador;
 
 	private Timer temp;
-	
-	public TelaPrincipal() {
-		
-		this.jogo = new Jogo();
+
+	public TelaPrincipal(Servidor servidor) {
+		this.servidor = servidor;
+		try {
+			jogador = servidor.conectar();
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		}
+
+		if (jogador == null) {
+			JOptionPane.showMessageDialog(getContentPane(),
+					"Já existe um jogo em andamento espere ele terminar");
+		}
 
 		getContentPane().setLayout(new BorderLayout());
 		setResizable(false);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 
-		ActionListener fazJogada = new ActionListener() {
-			public void actionPerformed(ActionEvent evt) {
-				if (TelaPrincipal.this.jogo.getEstado() == Estado.VEZ_JOG2) {
-					int res = TelaPrincipal.this.jogo.getJogador(1).atira();
-					mapa1.repaint();
-
-					if (res == 1) {
-						temp.stop();
-						TelaPrincipal.this.jogo.setEstado(Estado.VEZ_JOG1);
-					} else if (res > 1) {
-						if (TelaPrincipal.this.jogo.getEstado() == Estado.TERMINADO) {
-							temp.stop();
-							mostraEventos();
-						} else if (TelaPrincipal.this.jogo.getJogador(0)
-								.getNavio(res).estaDestruido())
-							mostraEventos();
-					}
-				}
-			}
-		};
-
-		temp = new Timer(1000, fazJogada);
+		/*
+		 * ActionListener fazJogada = new ActionListener() { public void
+		 * actionPerformed(ActionEvent evt) { if
+		 * (TelaPrincipal.this.getEstadoJogo() == Estado.VEZ_JOG2) { int res =
+		 * TelaPrincipal.this.jogo.getJogador(1).atira(); mapa1.repaint();
+		 * 
+		 * if (res == 1) { temp.stop();
+		 * TelaPrincipal.this.setEstadoJogo(Estado.VEZ_JOG1); } else if (res >
+		 * 1) { if (TelaPrincipal.this.getEstadoJogo() == Estado.TERMINADO) {
+		 * temp.stop(); mostraEventos(); } else if
+		 * (TelaPrincipal.this.jogo.getJogador(0)
+		 * .getNavio(res).estaDestruido()) mostraEventos(); } } } };
+		 * 
+		 * temp = new Timer(1000, fazJogada);
+		 */
 
 		adicionaCaixaEventos();
 		adicionaGrades();
 	}
 
+	public Estado getEstadoJogo() {
+		try {
+			return servidor.getEstadoJodo();
+		} catch (RemoteException e) {
+			e.printStackTrace();
+			return Estado.TERMINADO;
+		}
+	}
+
+	public void setEstadoJogo(Estado estado) {
+		try {
+			servidor.setEstadoJodo(estado);
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		}
+	}
 
 	private void adicionaGrades() {
 		JPanel mapas = new JPanel(new GridLayout(1, 2, 30, 10));
 		mapas.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-		mapa1 = new TelaTabuleiroJogador(this, this.jogo.getJogador(0), 0);
-		mapa2 = new TelaTabuleiroOponente(this, this.jogo.getJogador(1), 1);
+		mapa1 = new TelaTabuleiroJogador(this, jogador, 0);
+		try {
+			mapa2 = new TelaTabuleiroOponente(this,
+					servidor.getOponente(jogador.getId()), 1);
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		}
 
 		mapas.add(mapa1);
 		mapas.add(mapa2);
 		getContentPane().add(mapas, BorderLayout.NORTH);
 	}
-
 
 	public void atualizaGrades() {
 		mapa1.repaint();
@@ -86,7 +113,8 @@ public class TelaPrincipal extends JFrame {
 
 		JPanel painelEventos = new JPanel(new GridLayout(1, 1));
 		painelEventos.setPreferredSize(new Dimension(630, 150));
-		painelEventos.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+		painelEventos
+				.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
 		caixaEventos = new JTextArea();
 		JScrollPane rolagemEventos = new JScrollPane(caixaEventos);
@@ -103,12 +131,16 @@ public class TelaPrincipal extends JFrame {
 	}
 
 	public void mostraEventos() {
-		Evento e = jogo.getEvento();
+		Evento e;
+		try {
+			e = servidor.getJogo().getEvento();
 
-		while (e != null) {
-			mostraEvento(e.getMensagem());
-
-			e = jogo.getEvento();
+			while (e != null) {
+				mostraEvento(e.getMensagem());
+				e = servidor.getJogo().getEvento();
+			}
+		} catch (RemoteException e1) {
+			e1.printStackTrace();
 		}
 	}
 

@@ -21,10 +21,10 @@ public class TratadorMouseOponente implements MouseListener, MouseMotionListener
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-		if (jogador.getJogo().getEstado() == Estado.POSICIONANDO_NAVIOS) {
+		if (painel.principal.getEstadoJogo() == Estado.POSICIONANDO_NAVIOS) {
 			return;
 	
-		} else if (jogador.getJogo().getEstado() == Estado.VEZ_JOG1) {												// andamento
+		} else if (painel.principal.getEstadoJogo() == Estado.VEZ_JOG1) {												// andamento
 			painel.adicionarJogada();
 		}
 	}

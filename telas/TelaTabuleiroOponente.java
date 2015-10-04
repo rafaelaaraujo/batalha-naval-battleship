@@ -7,6 +7,7 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
 import java.io.IOException;
+import java.rmi.RemoteException;
 
 import javax.swing.JPanel;
 
@@ -24,7 +25,7 @@ public class TelaTabuleiroOponente extends JPanel {
 	private static final int TOTAL_NAVIOS = 8;
 	public static final int DIM_QUADRADO = 30;
 
-	private TelaPrincipal principal;
+	public TelaPrincipal principal;
 	private TratarImagens tratarImagens = new TratarImagens();
 	private Jogador jogador;
 	private Image fundo;
@@ -53,7 +54,7 @@ public class TelaTabuleiroOponente extends JPanel {
 		posicaoAtual = new Point(0, 0);
 
 		// Atual navio sendo posicionado
-			jogador.getNavio(idNavioAtual).setPosicao(posicaoAtual);
+		jogador.getNavio(idNavioAtual).setPosicao(posicaoAtual);
 		principal.mostraEventos();
 		
 
@@ -75,7 +76,7 @@ public class TelaTabuleiroOponente extends JPanel {
 		try {
 			Graphics2D g2 = (Graphics2D) g;
 		    
-			for (Point pt : jogador.getOponente().getTiros()) {
+			for (Point pt : principal.servidor.getTiros()) {
 				int valor = jogador.getTabuleiro().getValorPosicao(pt.x, pt.y);
 				if (valor == -1) {
 
@@ -120,7 +121,7 @@ public class TelaTabuleiroOponente extends JPanel {
 			try {
 				jogador.getTabuleiro().adicionaNavio(jogador.getNavio(idNavioAtual));
 				if (idNavioAtual == TOTAL_NAVIOS) {
-					jogador.getJogo().setEstado(Estado.VEZ_JOG1);
+					principal.setEstadoJogo(Estado.VEZ_JOG1);
 				} else
 					idNavioAtual ++;
 			} catch (NullPointerException npe) {
@@ -133,24 +134,26 @@ public class TelaTabuleiroOponente extends JPanel {
 		Point pos = posicaoAtual;
 
 		try {
-			int res = jogador.getOponente().atira(pos.x, pos.y);
+			int res = principal.servidor.atira(jogador.getId(),pos.x, pos.y);
 			repaint();
 			if (res == 1) {
-				jogador.getJogo().setEstado(Estado.VEZ_JOG2);
+				principal.setEstadoJogo(Estado.VEZ_JOG2);
 				principal.tempoDeEspera();
 			} else if (res > 1) {
 				if (jogador.getNavio(res).estaDestruido()) {
 					principal.mostraEventos();
 				}
-				if (jogador.getJogo().getEstado() == Estado.TERMINADO) {
+				if (principal.getEstadoJogo() == Estado.TERMINADO) {
 					principal.mostraEventos();
 				}
 			}
-		} catch (PosicaoJaAtingidaException ex) {
+		} catch (PosicaoJaAtingidaException | RemoteException ex) {
 			principal.mostraEvento(ex.getMessage());
 		}
 	}
 
+	
+	
 	
 	private void addMouseListeners() {
 		addMouseListener(tm);

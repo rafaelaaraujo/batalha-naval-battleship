@@ -19,7 +19,6 @@ public class Jogador implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	
-	private Jogo jogo;
 	private Tabuleiro tabuleiro;
 	private ArrayList<Navio> frota = new ArrayList<Navio>();
 	private ArrayList<Point> tiros = new ArrayList<Point>();
@@ -29,15 +28,10 @@ public class Jogador implements Serializable {
 	private int i;
 	private int j;
 
-	/**
-	 * Cria um novo jogador para o jogo.
-	 * 
-	 * @param jogo
-	 *            Jogo do qual o jogador participa.
-	 */
+	private int id = 0;
 
-	public Jogador(Jogo jogo) {
-		this.jogo = jogo;
+	public Jogador(int id) {
+		this.id = id;
 		this.tabuleiro = new Tabuleiro(); // Tabuleiro zerado
 		
         frota.add(new Fragata(this));
@@ -51,46 +45,6 @@ public class Jogador implements Serializable {
         frotaRestante.addAll(frota);
         
 	}
-
-
-	/**
-	 * Atira num ponto determinado.
-	 * 
-	 * @param linha
-	 * @param coluna
-	 */
-	public int atira(int coluna, int linha) throws PosicaoJaAtingidaException{
-		int valorAtual = getOponente().getTabuleiro().getValorPosicao(coluna, linha);
-
-		if (valorAtual >= 1) {   // quando posição é atingida seu valor fica negativo 
-			tiros.add(new Point(coluna, linha));
-			getOponente().getTabuleiro().setPosicao(coluna, linha, -valorAtual); // coloca posicao como atingida
-			if (valorAtual > 1 && getOponente().getNavio(valorAtual).estaDestruido()) {
-				getOponente().destroirNavio(valorAtual);
-			}
-		} else {
-			throw new PosicaoJaAtingidaException();
-		}
-		return valorAtual;
-	}
-
-	/**
-	 * Atira aleatoriamente.
-	 * 
-	 */
-	public int atira() {
-		int largura = tabuleiro.getMapa()[0].length;
-		int altura = tabuleiro.getMapa().length;
-		int x = (int)(Math.random()*largura);
-		int y = (int)(Math.random()*altura);
-
-		try {
-			return atira(x, y);
-		} catch (Exception e) {
-			return atira();
-		}
-	}
-
 
 	public void posicionarNavio(Point pos, int id) {
 		getNavio(id).setPosicao(pos);
@@ -136,11 +90,6 @@ public class Jogador implements Serializable {
 		
 	}
 
-
-	public Jogo getJogo() {
-		return jogo;
-	}
-
 	public Tabuleiro getTabuleiro() {
 		return tabuleiro;
 	}
@@ -165,14 +114,9 @@ public class Jogador implements Serializable {
 		return frotaRestante;
 	}
 
-	/**
-	 * Retorna o oponente do jogador.
-	 * 
-	 * @return <code>Jogador</code>
-	 */
-	public Jogador getOponente() {
-		return (this == jogo.getJogador(0))
-				? jogo.getJogador(1)
-				: jogo.getJogador(0);
+
+	public int getId() {
+		return id;
 	}
+	
 }
