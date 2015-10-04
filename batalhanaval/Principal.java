@@ -1,15 +1,11 @@
 package batalhanaval;
 
-import java.net.MalformedURLException;
-import java.rmi.Naming;
 import java.rmi.NotBoundException;
-import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 
 import Server.Servidor;
-import Server.ServidorImpl;
 import telas.TelaPrincipal;
 
 public class Principal {
