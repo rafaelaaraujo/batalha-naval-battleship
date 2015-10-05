@@ -4,6 +4,8 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.GridLayout;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.rmi.RemoteException;
 
 import javax.swing.BorderFactory;
@@ -12,6 +14,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.event.InternalFrameAdapter;
+import javax.swing.event.InternalFrameEvent;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -29,8 +33,6 @@ public class TelaPrincipal extends JFrame {
 	private JTextArea caixaEventos;
 	public Servidor servidor;
 	private Jogador jogador;
-	private Timer timer;
-	private JOptionPane alertaOponente = null;
 
 	public TelaPrincipal(Servidor servidor, Jogador jogador) {
 		this.servidor = servidor;
@@ -41,39 +43,21 @@ public class TelaPrincipal extends JFrame {
 		setResizable(false);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 
-		/*
-		 * ActionListener fazJogada = new ActionListener() { public void
-		 * actionPerformed(ActionEvent evt) { if
-		 * (TelaPrincipal.this.getEstadoJogo() == Estado.VEZ_JOG2) { int res =
-		 * TelaPrincipal.this.jogo.getJogador(1).atira(); mapa1.repaint();
-		 * 
-		 * if (res == 1) { temp.stop();
-		 * TelaPrincipal.this.setEstadoJogo(Estado.VEZ_JOG1); } else if (res >
-		 * 1) { if (TelaPrincipal.this.getEstadoJogo() == Estado.TERMINADO) {
-		 * temp.stop(); mostraEventos(); } else if
-		 * (TelaPrincipal.this.jogo.getJogador(0)
-		 * .getNavio(res).estaDestruido()) mostraEventos(); } } } };
-		 */
+		addWindowListener(new java.awt.event.WindowAdapter() {
+		    @Override
+		    public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+		        try {
+					servidor.desconectar(jogador);
+				} catch (RemoteException e) {
+					e.printStackTrace();
+				}
+		    }
+		}); 
+		
 		adicionaCaixaEventos();
 		adicionaGrades();
 	}
 
-	public Estado getEstadoJogo() {
-		try {
-			return servidor.getEstadoJodo();
-		} catch (RemoteException e) {
-			e.printStackTrace();
-			return Estado.TERMINADO;
-		}
-	}
-
-	public void setEstadoJogo(Estado estado) {
-		try {
-			servidor.setEstadoJodo(estado);
-		} catch (RemoteException e) {
-			e.printStackTrace();
-		}
-	}
 
 	private void adicionaGrades() {
 		JPanel mapas = new JPanel(new GridLayout(1, 2, 30, 10));
@@ -82,7 +66,7 @@ public class TelaPrincipal extends JFrame {
 		mapa1 = new TelaTabuleiroJogador(this, jogador);
 		try {
 			mapa2 = new TelaTabuleiroOponente(this,
-					servidor.getOponente(jogador.getId()));
+					getOponente(jogador));
 		} catch (RemoteException e) {
 			e.printStackTrace();
 		}
@@ -132,10 +116,34 @@ public class TelaPrincipal extends JFrame {
 		}
 	}
 
-	/**
-	 * Inicia o temporizador do jogador automático.
-	 * 
-	 * 
-	 * public void tempoDeEspera() { temp.start(); }
-	 */
+
+
+	public void setEstadoJogo(Estado estado) {
+		try {
+			servidor.setEstadoJogo(estado);
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		}
+		
+	}
+
+
+
+	public Estado getEstadoJogo() {
+		try {
+			return servidor.getEstadoJogo();
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		}
+		return Estado.JOGADOR_2;
+	}
+
+	public Jogador getOponente(Jogador jogador) throws RemoteException {
+		Estado estadoOponente = jogador.getId() == Estado.JOGADOR_1 ? Estado.JOGADOR_2
+				: Estado.JOGADOR_2;
+
+		return servidor.getJogador(estadoOponente);
+	}
+	
+
 }

@@ -26,7 +26,7 @@ public class TelaTabuleiroJogador extends JPanel {
 
 	public TelaPrincipal principal;
 	private TratarImagens tratarImagens = new TratarImagens();
-	private Jogador jogador;
+	public Jogador jogador;
 	private Image fundo;
 	private Dimension dim;
 
@@ -80,8 +80,7 @@ public class TelaTabuleiroJogador extends JPanel {
 		try {
 			Graphics2D g2 = (Graphics2D) g;
 
-			for (Point pt : principal.servidor.getOponente(jogador.getId())
-					.getTiros()) {
+			for (Point pt : principal.getOponente(jogador).getTiros()) {
 				int valor = jogador.getTabuleiro().getValorPosicao(pt.x, pt.y);
 				if (valor == -1) {
 
@@ -154,14 +153,23 @@ public class TelaTabuleiroJogador extends JPanel {
 			try {
 				jogador.getTabuleiro().adicionaNavio(
 						jogador.getNavio(idNavioAtual));
+
 				if (idNavioAtual == TOTAL_NAVIOS) {
-					principal.setEstadoJogo(Estado.VEZ_JOG1);
-				} else
+					jogador.setPosicionandoNavio(false);
+
+					try {
+						principal.servidor.retiraEstadoAdicionandoNavio(jogador.getId());
+					} catch (RemoteException e) {
+						e.printStackTrace();
+					}
+				} else {
 					idNavioAtual++;
+				}
 			} catch (NullPointerException npe) {
 				npe.printStackTrace();
-			}
+			} 
 		}
+	
 	}
 
 	public void adicionarJogada() {
@@ -171,8 +179,10 @@ public class TelaTabuleiroJogador extends JPanel {
 			int res = principal.servidor.atira(jogador.getId(), pos.x, pos.y);
 			repaint();
 			if (res == 1) {
-				principal.setEstadoJogo(Estado.VEZ_JOG2);
-				//principal.tempoDeEspera();
+				principal
+						.setEstadoJogo(jogador.getId() == Estado.JOGADOR_1 ? Estado.JOGADOR_2
+								: Estado.JOGADOR_1);
+				// principal.tempoDeEspera();
 			} else if (res > 1) {
 				if (jogador.getNavio(res).estaDestruido()) {
 					principal.mostraEventos();
@@ -189,12 +199,17 @@ public class TelaTabuleiroJogador extends JPanel {
 	}
 
 	public void posicionarNavio(Point posicaoAtual2) {
-		Point posAntiga = jogador.getNavio(idNavioAtual).getPosicao();
-		jogador.getNavio(idNavioAtual).setPosicao(posicaoAtual2);
-		if (jogador.getTabuleiro().cabeNavio(jogador.getNavio(idNavioAtual))) {
-			repaint();
-		} else {
-			jogador.getNavio(idNavioAtual).setPosicao(posAntiga);
+		try {
+			Point posAntiga = jogador.getNavio(idNavioAtual).getPosicao();
+			jogador.getNavio(idNavioAtual).setPosicao(posicaoAtual2);
+			if (jogador.getTabuleiro()
+					.cabeNavio(jogador.getNavio(idNavioAtual))) {
+				repaint();
+			} else {
+				jogador.getNavio(idNavioAtual).setPosicao(posAntiga);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 
 	}

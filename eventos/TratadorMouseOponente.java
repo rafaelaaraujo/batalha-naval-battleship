@@ -4,10 +4,10 @@ import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.rmi.RemoteException;
 
-import batalhanaval.Jogador;
 import telas.TelaTabuleiroOponente;
-import telas.TelaTabuleiroJogador;
+import batalhanaval.Jogador;
 import enuns.Estado;
 
 public class TratadorMouseOponente implements MouseListener, MouseMotionListener {
@@ -21,11 +21,12 @@ public class TratadorMouseOponente implements MouseListener, MouseMotionListener
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-		if (painel.principal.getEstadoJogo() == Estado.POSICIONANDO_NAVIOS) {
-			return;
-	
-		} else if (painel.principal.getEstadoJogo() == Estado.VEZ_JOG1) {												// andamento
-			painel.adicionarJogada();
+		try {
+			if (painel.principal.servidor.getEstadoJogo()  == jogador.getId()) {												// andamento
+				painel.adicionarJogada();
+			}
+		} catch (RemoteException e1) {
+			e1.printStackTrace();
 		}
 	}
 

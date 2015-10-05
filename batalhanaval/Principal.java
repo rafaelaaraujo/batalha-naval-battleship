@@ -1,6 +1,8 @@
 package batalhanaval;
 
 import java.awt.Dialog;
+import java.awt.Dimension;
+import java.awt.Frame;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -9,7 +11,12 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import javax.swing.JDialog;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+
+import com.sun.prism.paint.Paint;
 
 import Server.Servidor;
 import telas.TelaPrincipal;
@@ -18,9 +25,9 @@ public class Principal {
 
 	private static Timer timer;
 	private static Servidor s = null;
-	private static JDialog dialog = null;
 	private static TimerTask tt;
 	private static Jogador jogador;
+	private static JFrame frame;
 
 	public static void main(String[] args) {
 		try {
@@ -30,7 +37,8 @@ public class Principal {
 			jogador = s.conectar();
 
 			if (jogador == null) {
-				JOptionPane.showMessageDialog(null,"Já existe um jogo em andamento espere ele terminar");
+				JOptionPane.showMessageDialog(null,
+						"Já existe um jogo em andamento espere ele terminar");
 			} else {
 
 				if (s.oponenteConectado()) {
@@ -53,13 +61,17 @@ public class Principal {
 		} catch (RemoteException e) {
 			e.printStackTrace();
 		}
-		
+
 	}
 
 	private static void iniciaTelaPrincipal() {
 		if (timer != null) {
 			timer.cancel();
 			tt.cancel();
+		}
+
+		if (frame != null) {
+			frame.setVisible(false);
 		}
 
 		TelaPrincipal principal = new TelaPrincipal(s, jogador);
@@ -74,7 +86,6 @@ public class Principal {
 			public void run() {
 				try {
 					if (s.oponenteConectado()) {
-						closeDialog();
 						iniciaTelaPrincipal();
 					} else {
 						mostrarAlertaAguardandoOponente();
@@ -90,23 +101,23 @@ public class Principal {
 	}
 
 	private static void mostrarAlertaAguardandoOponente() {
-		final JOptionPane optionPane = new JOptionPane(
-				"Oponente não conectado", JOptionPane.INFORMATION_MESSAGE,
-				JOptionPane.DEFAULT_OPTION, null, new Object[] {}, null);
+		if (frame == null) {
+			JPanel panel = new JPanel();
+			panel.setMinimumSize(new Dimension(200, 200));
 
-		dialog = new JDialog();
-		dialog.setTitle("Message");
-		dialog.setModal(true);
+			JTextField txt = new JTextField();
+			txt.setText("Oponente ainda não conectou");
+			txt.setEditable(false);
 
-		dialog.setContentPane(optionPane);
+			panel.add(txt);
+			frame = new JFrame(
+					"JOptionPane showMessageDialog component example");
+			frame.add(panel);
+			frame.pack();
+			frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+			frame.setVisible(true);
+		}
 
-		dialog.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
-
-		dialog.pack();
-		dialog.show();
 	}
 
-	private static void closeDialog() {
-		dialog.dispose();
-	}
 }

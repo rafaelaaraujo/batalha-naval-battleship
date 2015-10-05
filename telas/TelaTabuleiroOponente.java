@@ -8,6 +8,7 @@ import java.awt.Image;
 import java.awt.Point;
 import java.io.IOException;
 import java.rmi.RemoteException;
+import java.security.cert.PKIXRevocationChecker.Option;
 
 import javax.swing.JPanel;
 
@@ -22,7 +23,7 @@ import batalhanaval.*;
 
 @SuppressWarnings("serial")
 public class TelaTabuleiroOponente extends JPanel {
-	
+
 	private static final int TOTAL_NAVIOS = 8;
 	public static final int DIM_QUADRADO = 30;
 
@@ -33,7 +34,7 @@ public class TelaTabuleiroOponente extends JPanel {
 
 	private int idNavioAtual = 2;
 	public Point posicaoAtual;
-	
+
 	private TratadorMouseOponente tm;
 	private Jogador oponente;
 
@@ -46,7 +47,9 @@ public class TelaTabuleiroOponente extends JPanel {
 			e.printStackTrace();
 		}
 
-		dim = new Dimension(jogador.getTabuleiro().getMapa().length* DIM_QUADRADO, jogador.getTabuleiro().getMapa()[0].length* DIM_QUADRADO);
+		dim = new Dimension(jogador.getTabuleiro().getMapa().length
+				* DIM_QUADRADO, jogador.getTabuleiro().getMapa()[0].length
+				* DIM_QUADRADO);
 		setPreferredSize(dim);
 
 		// Quadrado onde o ponteiro está
@@ -55,7 +58,6 @@ public class TelaTabuleiroOponente extends JPanel {
 		// Atual navio sendo posicionado
 		jogador.getNavio(idNavioAtual).setPosicao(posicaoAtual);
 		principal.mostraEventos();
-		
 
 		tm = new TratadorMouseOponente(this, oponente);
 		addMouseListeners();
@@ -74,8 +76,9 @@ public class TelaTabuleiroOponente extends JPanel {
 	private void desenhaTiros(Graphics g) {
 		try {
 			Graphics2D g2 = (Graphics2D) g;
-		    
-			for (Point pt : principal.servidor.getOponente(oponente.getId()).getTiros()) {
+
+			for (Point pt : principal.getOponente(oponente)
+					.getTiros()) {
 				int valor = oponente.getTabuleiro().getValorPosicao(pt.x, pt.y);
 				if (valor == -1) {
 
@@ -97,7 +100,8 @@ public class TelaTabuleiroOponente extends JPanel {
 			if (navio.getPosicao() != null)
 				if (navio.estaDestruido())
 					g.drawImage(
-							tratarImagens.getImagemNavio(navio.getId(),navio.getOrientacao()),
+							tratarImagens.getImagemNavio(navio.getId(),
+									navio.getOrientacao()),
 							navio.getPosicao().x * 30,
 							navio.getPosicao().y * 30, null);
 		}
@@ -107,37 +111,27 @@ public class TelaTabuleiroOponente extends JPanel {
 		g.drawImage(fundo, 0, 0, null);
 		g.setColor(Color.BLUE);
 		g.drawRect(0, 0, this.getWidth() - 1, this.getHeight() - 1);
-		
+
 		for (int i = 1; i < 20; i++) {
-			g.drawLine(i * 30, 0, i * 30,oponente.getTabuleiro().getMapa().length * DIM_QUADRADO); // linha horizontal
-			g.drawLine(0, i * 30, oponente.getTabuleiro().getMapa().length* DIM_QUADRADO, i * 30); // linha vertical
+			g.drawLine(i * 30, 0, i * 30,
+					oponente.getTabuleiro().getMapa().length * DIM_QUADRADO); // linha
+																				// horizontal
+			g.drawLine(0, i * 30, oponente.getTabuleiro().getMapa().length
+					* DIM_QUADRADO, i * 30); // linha vertical
 		}
 
-	}
-
-	public void adicionarNavio() {
-		if (idNavioAtual <= TOTAL_NAVIOS) {
-			try {
-				oponente.getTabuleiro().adicionaNavio(oponente.getNavio(idNavioAtual));
-				if (idNavioAtual == TOTAL_NAVIOS) {
-					principal.setEstadoJogo(Estado.VEZ_JOG1);
-				} else
-					idNavioAtual ++;
-			} catch (NullPointerException npe) {
-				npe.printStackTrace();
-			}
-		}
 	}
 
 	public void adicionarJogada() {
 		Point pos = posicaoAtual;
 
 		try {
-			int res = principal.servidor.atira(oponente.getId(),pos.x, pos.y);
+			int res = principal.servidor.atira(oponente.getId(), pos.x, pos.y);
 			repaint();
 			if (res == 1) {
-				principal.setEstadoJogo(Estado.VEZ_JOG2);
-				//principal.tempoDeEspera();
+				principal
+				.setEstadoJogo(oponente.getId() == Estado.JOGADOR_1 ? Estado.JOGADOR_2
+						: Estado.JOGADOR_1);				// principal.tempoDeEspera();
 			} else if (res > 1) {
 				if (oponente.getNavio(res).estaDestruido()) {
 					principal.mostraEventos();
@@ -155,7 +149,7 @@ public class TelaTabuleiroOponente extends JPanel {
 		addMouseListener(tm);
 		addMouseMotionListener(tm);
 	}
-	
+
 	public void removeMouseListeners() {
 		removeMouseListener(tm);
 		removeMouseMotionListener(tm);

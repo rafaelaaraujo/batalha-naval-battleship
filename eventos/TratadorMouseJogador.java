@@ -21,7 +21,7 @@ public class TratadorMouseJogador implements MouseListener, MouseMotionListener 
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-		if (painel.principal.getEstadoJogo() == Estado.POSICIONANDO_NAVIOS) {
+		if (painel.jogador.isPosicionandoNavio()) {
 			if (e.getButton() == MouseEvent.BUTTON3) { // Botão direito
 				painel.alteraOrientacaoNavio();
 
@@ -34,7 +34,7 @@ public class TratadorMouseJogador implements MouseListener, MouseMotionListener 
 	@Override
 	public void mouseMoved(MouseEvent e) {
 			painel.posicaoAtual = new Point(e.getX() / 30, e.getY() / 30);
-			if (painel.principal.getEstadoJogo() == Estado.POSICIONANDO_NAVIOS) {
+			if (painel.jogador.isPosicionandoNavio()) {
 				painel.posicionarNavio(painel.posicaoAtual);
 			
 		}
