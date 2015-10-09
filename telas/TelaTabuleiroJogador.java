@@ -18,17 +18,15 @@ import eventos.TratadorMouseJogador;
 import exceptions.PosicaoJaAtingidaException;
 import batalhanaval.*;
 
-@SuppressWarnings("serial")
 public class TelaTabuleiroJogador extends JPanel {
 
+	private static final long serialVersionUID = 1L;
 	private static final int TOTAL_NAVIOS = 8;
 	public static final int DIM_QUADRADO = 30;
 
 	public TelaPrincipal principal;
 	private TratarImagens tratarImagens = new TratarImagens();
 	public Jogador jogador;
-	private Image fundo;
-	private Dimension dim;
 
 	private int idNavioAtual = 2;
 	private OrientacaoNavio orientacaoAtual;
@@ -39,15 +37,11 @@ public class TelaTabuleiroJogador extends JPanel {
 	public TelaTabuleiroJogador(TelaPrincipal p, Jogador j) {
 		principal = p;
 		jogador = j;
-		try {
-			fundo = tratarImagens.getImagemMar(0);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 
-		dim = new Dimension(jogador.getTabuleiro().getMapa().length
+		Dimension dim = new Dimension(jogador.getTabuleiro().getMapa().length
 				* DIM_QUADRADO, jogador.getTabuleiro().getMapa()[0].length
 				* DIM_QUADRADO);
+
 		setPreferredSize(dim);
 
 		// Quadrado onde o ponteiro está
@@ -109,18 +103,24 @@ public class TelaTabuleiroJogador extends JPanel {
 	}
 
 	private void desenhaTabuleiro(Graphics g) {
-		g.drawImage(fundo, 0, 0, null);
-		g.setColor(Color.BLUE);
-		g.drawRect(0, 0, this.getWidth() - 1, this.getHeight() - 1);
+		try {
+			g.drawImage(tratarImagens.getImagemMar(0), 0, 0, null);
 
-		for (int i = 1; i < 20; i++) {
-			g.drawLine(i * 30, 0, i * 30,
-					jogador.getTabuleiro().getMapa().length * DIM_QUADRADO); // linha
-																				// horizontal
-			g.drawLine(0, i * 30, jogador.getTabuleiro().getMapa().length
-					* DIM_QUADRADO, i * 30); // linha vertical
+			g.setColor(Color.BLUE);
+			g.drawRect(0, 0, this.getWidth() - 1, this.getHeight() - 1);
+
+			//desenha linahs vertical e horizontal
+			for (int i = 1; i < 20; i++) {
+				g.drawLine(i * 30, 0, i * 30,
+						jogador.getTabuleiro().getMapa().length * DIM_QUADRADO); // linha
+																					// horizontal
+				g.drawLine(0, i * 30, jogador.getTabuleiro().getMapa().length
+						* DIM_QUADRADO, i * 30); // linha vertical
+			}
+			
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
-
 	}
 
 	public void alteraOrientacaoNavio() {
@@ -158,7 +158,8 @@ public class TelaTabuleiroJogador extends JPanel {
 					jogador.setPosicionandoNavio(false);
 
 					try {
-						principal.servidor.retiraEstadoAdicionandoNavio(jogador.getId());
+						principal.servidor.retiraEstadoAdicionandoNavio(jogador
+								.getId());
 					} catch (RemoteException e) {
 						e.printStackTrace();
 					}
@@ -167,43 +168,17 @@ public class TelaTabuleiroJogador extends JPanel {
 				}
 			} catch (NullPointerException npe) {
 				npe.printStackTrace();
-			} 
-		}
-	
-	}
-
-	public void adicionarJogada() {
-		Point pos = posicaoAtual;
-
-		try {
-			int res = principal.servidor.atira(jogador.getId(), pos.x, pos.y);
-			repaint();
-			if (res == 1) {
-				principal
-						.setEstadoJogo(jogador.getId() == Estado.JOGADOR_1 ? Estado.JOGADOR_2
-								: Estado.JOGADOR_1);
-				// principal.tempoDeEspera();
-			} else if (res > 1) {
-				if (jogador.getNavio(res).estaDestruido()) {
-					principal.mostraEventos();
-				}
-				if (principal.getEstadoJogo() == Estado.TERMINADO) {
-					principal.mostraEventos();
-				}
 			}
-		} catch (PosicaoJaAtingidaException ex) {
-			principal.mostraEvento(ex.getMessage());
-		} catch (RemoteException e) {
-			e.printStackTrace();
 		}
+
 	}
 
+	
 	public void posicionarNavio(Point posicaoAtual2) {
 		try {
 			Point posAntiga = jogador.getNavio(idNavioAtual).getPosicao();
 			jogador.getNavio(idNavioAtual).setPosicao(posicaoAtual2);
-			if (jogador.getTabuleiro()
-					.cabeNavio(jogador.getNavio(idNavioAtual))) {
+			if (jogador.getTabuleiro().cabeNavio(jogador.getNavio(idNavioAtual))) {
 				repaint();
 			} else {
 				jogador.getNavio(idNavioAtual).setPosicao(posAntiga);

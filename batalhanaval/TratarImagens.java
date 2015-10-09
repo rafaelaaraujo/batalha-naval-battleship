@@ -6,9 +6,7 @@ import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 
-import navios.Navio;
 import enuns.OrientacaoNavio;
-import enuns.TipoNavio;
 
 public class TratarImagens {
 	// Imagens

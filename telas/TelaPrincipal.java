@@ -1,9 +1,12 @@
 package telas;
 
 import java.awt.BorderLayout;
+import java.awt.Button;
 import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.rmi.RemoteException;
@@ -38,38 +41,41 @@ public class TelaPrincipal extends JFrame {
 		this.servidor = servidor;
 		this.jogador = jogador;
 
-
 		getContentPane().setLayout(new BorderLayout());
 		setResizable(false);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 
+		setWindowListner();
+		adicionaCaixaEventos();
+		adicionaTabuleiros();
+	}
+	
+
+	private void setWindowListner() {
 		addWindowListener(new java.awt.event.WindowAdapter() {
-		    @Override
-		    public void windowClosing(java.awt.event.WindowEvent windowEvent) {
-		        try {
+			@Override
+			public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+				try {
 					servidor.desconectar(jogador);
 				} catch (RemoteException e) {
 					e.printStackTrace();
 				}
-		    }
-		}); 
-		
-		adicionaCaixaEventos();
-		adicionaGrades();
+			}
+		});
 	}
 
-
-	private void adicionaGrades() {
+	private void adicionaTabuleiros() {
 		JPanel mapas = new JPanel(new GridLayout(1, 2, 30, 10));
 		mapas.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
 		mapa1 = new TelaTabuleiroJogador(this, jogador);
-		try {
-			mapa2 = new TelaTabuleiroOponente(this,
-					getOponente(jogador));
-		} catch (RemoteException e) {
-			e.printStackTrace();
-		}
+	
+			try {
+				mapa2 = new TelaTabuleiroOponente(this, getOponente(jogador));
+			} catch (RemoteException e) {
+				e.printStackTrace();
+			}
+	
 
 		mapas.add(mapa1);
 		mapas.add(mapa2);
@@ -97,7 +103,7 @@ public class TelaPrincipal extends JFrame {
 	}
 
 	public void mostraEvento(String msg) {
-		caixaEventos.append("> " + msg + "\n");
+		caixaEventos.append("--> " + msg + "\n");
 		// Rolagem automatica
 		caixaEventos.setCaretPosition(caixaEventos.getDocument().getLength());
 	}
@@ -107,16 +113,12 @@ public class TelaPrincipal extends JFrame {
 		try {
 			e = servidor.getJogo().getEvento();
 
-			// while (e != null) {
 			mostraEvento(e.getMensagem());
 			e = servidor.getJogo().getEvento();
-			// }
 		} catch (RemoteException e1) {
 			e1.printStackTrace();
 		}
 	}
-
-
 
 	public void setEstadoJogo(Estado estado) {
 		try {
@@ -124,10 +126,7 @@ public class TelaPrincipal extends JFrame {
 		} catch (RemoteException e) {
 			e.printStackTrace();
 		}
-		
 	}
-
-
 
 	public Estado getEstadoJogo() {
 		try {
@@ -144,6 +143,5 @@ public class TelaPrincipal extends JFrame {
 
 		return servidor.getJogador(estadoOponente);
 	}
-	
 
 }

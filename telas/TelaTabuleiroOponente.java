@@ -24,7 +24,6 @@ import batalhanaval.*;
 @SuppressWarnings("serial")
 public class TelaTabuleiroOponente extends JPanel {
 
-	private static final int TOTAL_NAVIOS = 8;
 	public static final int DIM_QUADRADO = 30;
 
 	public TelaPrincipal principal;
@@ -32,7 +31,6 @@ public class TelaTabuleiroOponente extends JPanel {
 	private Image fundo;
 	private Dimension dim;
 
-	private int idNavioAtual = 2;
 	public Point posicaoAtual;
 
 	private TratadorMouseOponente tm;
@@ -55,8 +53,6 @@ public class TelaTabuleiroOponente extends JPanel {
 		// Quadrado onde o ponteiro está
 		posicaoAtual = new Point(0, 0);
 
-		// Atual navio sendo posicionado
-		jogador.getNavio(idNavioAtual).setPosicao(posicaoAtual);
 		principal.mostraEventos();
 
 		tm = new TratadorMouseOponente(this, oponente);
@@ -77,8 +73,7 @@ public class TelaTabuleiroOponente extends JPanel {
 		try {
 			Graphics2D g2 = (Graphics2D) g;
 
-			for (Point pt : principal.getOponente(oponente)
-					.getTiros()) {
+			for (Point pt : oponente.getTiros()) {
 				int valor = oponente.getTabuleiro().getValorPosicao(pt.x, pt.y);
 				if (valor == -1) {
 
@@ -121,12 +116,52 @@ public class TelaTabuleiroOponente extends JPanel {
 		}
 
 	}
+	
+	public int atira(Estado id, int coluna, int linha) throws PosicaoJaAtingidaException, RemoteException {
+		int valorAtual = oponente.getTabuleiro().getValorPosicao(coluna, linha);
+
+		if (valorAtual >= 1) { // quando posição é atingida seu valor fica
+								// negativo
+			oponente.getTiros().add(new Point(coluna, linha));
+			oponente.getTabuleiro().setPosicao(coluna, linha, -valorAtual); // coloca
+
+			if (valorAtual > 1 && oponente.getNavio(valorAtual).estaDestruido()) {
+				destroirNavio(oponente, valorAtual);
+			}
+
+		} else {
+			throw new PosicaoJaAtingidaException();
+		}
+
+		return valorAtual;
+
+	}
+	
+	/**
+	 * Destroi um navio do jogador, subtraindo id de seu total de
+	 * identificadores de navios.
+	 * 
+	 * @param id
+	 *            O identificador do navio destruído.
+	 */
+	private void destroirNavio(Jogador jogador, int id) {
+		jogador.removerNavio(id);
+
+		principal.mostraEvento("Você afundou o "
+				+ jogador.getNavio(id).getNome().toLowerCase()
+				+ " do adversário!");
+
+		//colocar servidor p/ avisar q  navio foi destruido
+		//if (jogador.getFrotaRestante().size() == 0)
+			//jogo.setEstado(Estado.TERMINADO);
+	}
+
 
 	public void adicionarJogada() {
 		Point pos = posicaoAtual;
 
 		try {
-			int res = principal.servidor.atira(oponente.getId(), pos.x, pos.y);
+			int res = atira(oponente.getId(), pos.x, pos.y);
 			repaint();
 			if (res == 1) {
 				principal

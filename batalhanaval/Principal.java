@@ -1,8 +1,6 @@
 package batalhanaval;
 
-import java.awt.Dialog;
 import java.awt.Dimension;
-import java.awt.Frame;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -10,16 +8,13 @@ import java.rmi.registry.Registry;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import com.sun.prism.paint.Paint;
-
-import Server.Servidor;
 import telas.TelaPrincipal;
+import Server.Servidor;
 
 public class Principal {
 

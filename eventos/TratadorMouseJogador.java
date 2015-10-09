@@ -19,6 +19,7 @@ public class TratadorMouseJogador implements MouseListener, MouseMotionListener 
 		this.jogador = jogador;
 	}
 
+	
 	@Override
 	public void mousePressed(MouseEvent e) {
 		if (painel.jogador.isPosicionandoNavio()) {
