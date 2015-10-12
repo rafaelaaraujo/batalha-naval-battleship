@@ -8,21 +8,20 @@ import java.rmi.RemoteException;
 
 import telas.TelaTabuleiroOponente;
 import batalhanaval.Jogador;
+import batalhanaval.JogadoresServidor;
 import enuns.Estado;
 
 public class TratadorMouseOponente implements MouseListener, MouseMotionListener {
 	private TelaTabuleiroOponente painel;
-	private Jogador jogador;
 
-	public TratadorMouseOponente(TelaTabuleiroOponente painel, Jogador jogador) {
+	public TratadorMouseOponente(TelaTabuleiroOponente painel) {
 		this.painel = painel;
-		this.jogador = jogador;
 	}
 
 	@Override
 	public void mousePressed(MouseEvent e) {
 		try {
-			if (painel.principal.servidor.getEstadoJogo()  == jogador.getId()) {												// andamento
+			if (JogadoresServidor.getEstadoJogo()  == JogadoresServidor.jogadorId) {
 				painel.adicionarJogada();
 			}
 		} catch (RemoteException e1) {

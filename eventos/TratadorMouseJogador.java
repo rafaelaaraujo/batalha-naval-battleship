@@ -4,40 +4,49 @@ import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.rmi.RemoteException;
 
 import batalhanaval.Jogador;
+import batalhanaval.JogadoresServidor;
 import telas.TelaTabuleiroOponente;
 import telas.TelaTabuleiroJogador;
 import enuns.Estado;
 
 public class TratadorMouseJogador implements MouseListener, MouseMotionListener {
 	private TelaTabuleiroJogador painel;
-	private Jogador jogador;
 
-	public TratadorMouseJogador(TelaTabuleiroJogador painel, Jogador jogador) {
+	public TratadorMouseJogador(TelaTabuleiroJogador painel) {
 		this.painel = painel;
-		this.jogador = jogador;
 	}
 
-	
 	@Override
 	public void mousePressed(MouseEvent e) {
-		if (painel.jogador.isPosicionandoNavio()) {
-			if (e.getButton() == MouseEvent.BUTTON3) { // Botão direito
-				painel.alteraOrientacaoNavio();
 
-			} else {
-				painel.adicionarNavio();
+		try {
+			if (JogadoresServidor.getJogador().isPosicionandoNavio()) {
+				if (e.getButton() == MouseEvent.BUTTON3) { // Botão direito
+					painel.alteraOrientacaoNavio();
+
+				} else {
+					painel.adicionarNavio();
+				}
 			}
+		} catch (RemoteException e1) {
+			e1.printStackTrace();
 		}
+
 	}
 
 	@Override
 	public void mouseMoved(MouseEvent e) {
-			painel.posicaoAtual = new Point(e.getX() / 30, e.getY() / 30);
-			if (painel.jogador.isPosicionandoNavio()) {
-				painel.posicionarNavio(painel.posicaoAtual);
-			
+		painel.posicaoAtual = new Point(e.getX() / 30, e.getY() / 30);
+		try {
+			if (JogadoresServidor.getJogador().isPosicionandoNavio()) {
+				painel.posicionarNavio();
+
+			}
+		} catch (RemoteException e1) {
+			e1.printStackTrace();
 		}
 	}
 
@@ -61,6 +70,6 @@ public class TratadorMouseJogador implements MouseListener, MouseMotionListener 
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		// TODO Auto-generated method stub
-		
+
 	}
 }

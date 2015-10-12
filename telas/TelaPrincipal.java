@@ -25,6 +25,7 @@ import java.util.TimerTask;
 
 import Server.Servidor;
 import batalhanaval.Jogador;
+import batalhanaval.JogadoresServidor;
 import enuns.Estado;
 import eventos.Evento;
 
@@ -34,12 +35,8 @@ public class TelaPrincipal extends JFrame {
 	private TelaTabuleiroJogador mapa1;
 	private TelaTabuleiroOponente mapa2;
 	private JTextArea caixaEventos;
-	public Servidor servidor;
-	private Jogador jogador;
 
-	public TelaPrincipal(Servidor servidor, Jogador jogador) {
-		this.servidor = servidor;
-		this.jogador = jogador;
+	public TelaPrincipal() {
 
 		getContentPane().setLayout(new BorderLayout());
 		setResizable(false);
@@ -56,7 +53,7 @@ public class TelaPrincipal extends JFrame {
 			@Override
 			public void windowClosing(java.awt.event.WindowEvent windowEvent) {
 				try {
-					servidor.desconectar(jogador);
+					JogadoresServidor.desconectar();
 				} catch (RemoteException e) {
 					e.printStackTrace();
 				}
@@ -68,15 +65,9 @@ public class TelaPrincipal extends JFrame {
 		JPanel mapas = new JPanel(new GridLayout(1, 2, 30, 10));
 		mapas.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-		mapa1 = new TelaTabuleiroJogador(this, jogador);
+		mapa1 = new TelaTabuleiroJogador(this);
+		mapa2 = new TelaTabuleiroOponente();
 	
-			try {
-				mapa2 = new TelaTabuleiroOponente(this, getOponente(jogador));
-			} catch (RemoteException e) {
-				e.printStackTrace();
-			}
-	
-
 		mapas.add(mapa1);
 		mapas.add(mapa2);
 		getContentPane().add(mapas, BorderLayout.NORTH);
@@ -111,37 +102,12 @@ public class TelaPrincipal extends JFrame {
 	public void mostraEventos() {
 		Evento e;
 		try {
-			e = servidor.getJogo().getEvento();
-
+			e = JogadoresServidor.getEventos();
 			mostraEvento(e.getMensagem());
-			e = servidor.getJogo().getEvento();
 		} catch (RemoteException e1) {
 			e1.printStackTrace();
 		}
 	}
 
-	public void setEstadoJogo(Estado estado) {
-		try {
-			servidor.setEstadoJogo(estado);
-		} catch (RemoteException e) {
-			e.printStackTrace();
-		}
-	}
-
-	public Estado getEstadoJogo() {
-		try {
-			return servidor.getEstadoJogo();
-		} catch (RemoteException e) {
-			e.printStackTrace();
-		}
-		return Estado.JOGADOR_2;
-	}
-
-	public Jogador getOponente(Jogador jogador) throws RemoteException {
-		Estado estadoOponente = jogador.getId() == Estado.JOGADOR_1 ? Estado.JOGADOR_2
-				: Estado.JOGADOR_2;
-
-		return servidor.getJogador(estadoOponente);
-	}
 
 }

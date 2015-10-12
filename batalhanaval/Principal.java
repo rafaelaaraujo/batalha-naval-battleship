@@ -15,13 +15,14 @@ import javax.swing.JTextField;
 
 import telas.TelaPrincipal;
 import Server.Servidor;
+import enuns.Estado;
 
 public class Principal {
 
 	private static Timer timer;
 	private static Servidor s = null;
 	private static TimerTask tt;
-	private static Jogador jogador;
+	private static Estado id;
 	private static JFrame frame;
 
 	public static void main(String[] args) {
@@ -29,11 +30,11 @@ public class Principal {
 			Registry registry = LocateRegistry.getRegistry("127.0.0.1", 2050);
 			s = (Servidor) registry.lookup("Server");
 
-			jogador = s.conectar();
+			JogadoresServidor.servidor = s;
+			JogadoresServidor.jogadorId = s.conectar();
 
-			if (jogador == null) {
-				JOptionPane.showMessageDialog(null,
-						"Já existe um jogo em andamento espere ele terminar");
+			if (JogadoresServidor.jogadorId  == null) {
+				JOptionPane.showMessageDialog(null, "Já existe um jogo em andamento espere ele terminar");
 			} else {
 
 				if (s.oponenteConectado()) {
@@ -52,7 +53,7 @@ public class Principal {
 
 	private static void denconectar() {
 		try {
-			s.desconectar(jogador);
+			s.desconectar(id);
 		} catch (RemoteException e) {
 			e.printStackTrace();
 		}
@@ -69,7 +70,7 @@ public class Principal {
 			frame.setVisible(false);
 		}
 
-		TelaPrincipal principal = new TelaPrincipal(s, jogador);
+		TelaPrincipal principal = new TelaPrincipal();
 		principal.pack();
 		principal.setVisible(true);
 	}
@@ -105,8 +106,7 @@ public class Principal {
 			txt.setEditable(false);
 
 			panel.add(txt);
-			frame = new JFrame(
-					"JOptionPane showMessageDialog component example");
+			frame = new JFrame("JOptionPane showMessageDialog component example");
 			frame.add(panel);
 			frame.pack();
 			frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
