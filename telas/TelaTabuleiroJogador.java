@@ -4,19 +4,18 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Image;
 import java.awt.Point;
 import java.io.IOException;
 import java.rmi.RemoteException;
 
 import javax.swing.JPanel;
 
-import navios.Navio;
+import batalhanaval.Jogador;
+import batalhanaval.JogadoresServidor;
+import batalhanaval.TratarImagens;
 import enuns.OrientacaoNavio;
-import enuns.Estado;
 import eventos.TratadorMouseJogador;
-import exceptions.PosicaoJaAtingidaException;
-import batalhanaval.*;
+import navios.Navio;
 
 public class TelaTabuleiroJogador extends JPanel {
 
@@ -49,7 +48,7 @@ public class TelaTabuleiroJogador extends JPanel {
 			// Atual navio sendo posicionado
 			idNavioAtual = 2;
 			orientacaoAtual = OrientacaoNavio.HORIZONTAL;
-			JogadoresServidor.alteraPosicaoNavio(idNavioAtual,posicaoAtual);
+			JogadoresServidor.alteraPosicaoNavio(idNavioAtual, posicaoAtual);
 			principal.mostraEventos();
 			principal.mostraEvento("Movimente o navio com o mouse e clique com o "
 					+ "botão esquerdo para posicioná-lo.\n" + "Para mudar a orientação, clique com o botão direito.");
@@ -146,7 +145,8 @@ public class TelaTabuleiroJogador extends JPanel {
 			break;
 		}
 
-		JogadoresServidor.alteraOrientacaoNavio(idNavioAtual, orientacaoAtual);;
+		JogadoresServidor.alteraOrientacaoNavio(idNavioAtual, orientacaoAtual);
+		;
 		repaint();
 	}
 
@@ -179,7 +179,7 @@ public class TelaTabuleiroJogador extends JPanel {
 			JogadoresServidor.alteraPosicaoNavio(idNavioAtual, posicaoAtual);
 			Jogador jogador = JogadoresServidor.getJogador();
 			Navio navio = jogador.getNavio(idNavioAtual);
-			
+
 			if (jogador.getTabuleiro().cabeNavio(navio)) {
 				repaint();
 			} else {

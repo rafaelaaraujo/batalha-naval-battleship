@@ -8,7 +8,6 @@ import enuns.Estado;
 import enuns.OrientacaoNavio;
 import eventos.Evento;
 import navios.Navio;
-import sun.swing.MenuItemLayoutHelper.ColumnAlignment;
 
 public class JogadoresServidor {
 
@@ -37,15 +36,15 @@ public class JogadoresServidor {
 
 		return servidor.getJogador(estadoOponente);
 	}
-	
-	public static void desconectar() throws RemoteException{
+
+	public static void desconectar() throws RemoteException {
 		servidor.desconectar(jogadorId);
 	}
 
 	public static Evento getEventos() throws RemoteException {
 		return servidor.getJogo().getEvento();
 	}
-	
+
 	public static void retiraEstadoPosicionandoNavio() throws RemoteException {
 		servidor.retiraEstadoAdicionandoNavio(jogadorId);
 	}
@@ -53,15 +52,15 @@ public class JogadoresServidor {
 	public static void alteraPosicaoNavio(int idNavio, Point posicao) throws RemoteException {
 		servidor.alteraPosicaoDoNavio(jogadorId, idNavio, posicao);
 	}
-	
+
 	public static void alteraOrientacaoNavio(int idNavio, OrientacaoNavio orientacao) throws RemoteException {
 		servidor.alteraOrientacaoNavio(jogadorId, idNavio, orientacao);
 	}
-	
+
 	public static void adicionaNavio(Navio navio) throws RemoteException {
 		servidor.adicionaNavioTabuleiro(jogadorId, navio);
 	}
-	
+
 	public static void atirarNoOponente(int coluna, int linha) {
 		try {
 			servidor.atirarNoOponente(jogadorId, coluna, linha);
@@ -69,5 +68,5 @@ public class JogadoresServidor {
 			e.printStackTrace();
 		}
 	}
-	
+
 }

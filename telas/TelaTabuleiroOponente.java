@@ -8,18 +8,15 @@ import java.awt.Image;
 import java.awt.Point;
 import java.io.IOException;
 import java.rmi.RemoteException;
-import java.security.cert.PKIXRevocationChecker.Option;
 
 import javax.swing.JPanel;
 
-import navios.Navio;
-import enuns.OrientacaoNavio;
+import batalhanaval.JogadoresServidor;
+import batalhanaval.TratarImagens;
 import enuns.Estado;
 import eventos.TratadorMouseOponente;
-import eventos.TratadorMouseJogador;
 import exceptions.PosicaoJaAtingidaException;
-import Server.Servidor;
-import batalhanaval.*;
+import navios.Navio;
 
 @SuppressWarnings("serial")
 public class TelaTabuleiroOponente extends JPanel {
@@ -120,7 +117,8 @@ public class TelaTabuleiroOponente extends JPanel {
 	public int atira(Estado id, int coluna, int linha) throws PosicaoJaAtingidaException, RemoteException {
 		int valorAtual = JogadoresServidor.getOponente().getTabuleiro().getValorPosicao(coluna, linha);
 
-		if (valorAtual >= 1) { // quando posição é atingida seu valor fica negativa
+		if (valorAtual >= 1) { // quando posição é atingida seu valor fica
+								// negativa
 			JogadoresServidor.atirarNoOponente(coluna, linha);
 
 			if (valorAtual > 1 && JogadoresServidor.getOponente().getNavio(valorAtual).estaDestruido()) {
@@ -165,8 +163,8 @@ public class TelaTabuleiroOponente extends JPanel {
 			repaint();
 			if (res == 1) {
 				JogadoresServidor.setEstadoJogo(JogadoresServidor.getOponente().getId() == Estado.JOGADOR_1
-						? Estado.JOGADOR_2 : Estado.JOGADOR_1); 
-				
+						? Estado.JOGADOR_2 : Estado.JOGADOR_1);
+
 			} else if (res > 1) {
 				if (JogadoresServidor.getOponente().getNavio(res).estaDestruido()) {
 					principal.mostraEventos();

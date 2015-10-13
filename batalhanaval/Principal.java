@@ -1,10 +1,12 @@
 package batalhanaval;
 
 import java.awt.Dimension;
+import java.rmi.AccessException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -13,9 +15,11 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import telas.TelaPrincipal;
 import Server.Servidor;
 import enuns.Estado;
+import listeners.MessageListener;
+import listeners.MessageListenerImpl;
+import telas.TelaPrincipal;
 
 public class Principal {
 
@@ -27,17 +31,14 @@ public class Principal {
 
 	public static void main(String[] args) {
 		try {
-			Registry registry = LocateRegistry.getRegistry("127.0.0.1", 2050);
-			s = (Servidor) registry.lookup("Server");
+			inicializarServidor();
+			inicializarListenerService();
 
-			JogadoresServidor.servidor = s;
-			JogadoresServidor.jogadorId = s.conectar();
-
-			if (JogadoresServidor.jogadorId  == null) {
+			if (JogadoresServidor.jogadorId == null) {
 				JOptionPane.showMessageDialog(null, "Já existe um jogo em andamento espere ele terminar");
 			} else {
 
-				if (s.oponenteConectado()) {
+				if (JogadoresServidor.servidor.oponenteConectado()) {
 					iniciaTelaPrincipal();
 				} else {
 					verificarSeOponenteConectou();
@@ -49,6 +50,20 @@ public class Principal {
 			denconectar();
 		}
 
+	}
+
+	private static void inicializarServidor() throws RemoteException, NotBoundException, AccessException {
+		Registry registry = LocateRegistry.getRegistry("127.0.0.1", 2050);
+		s = (Servidor) registry.lookup("Server");
+		JogadoresServidor.servidor = s;
+
+		JogadoresServidor.jogadorId = s.conectar();
+	}
+
+	private static void inicializarListenerService() throws RemoteException {
+		MessageListener listener = new MessageListenerImpl();
+		UnicastRemoteObject.exportObject(listener, 0);
+		JogadoresServidor.servidor.addMessageListener(listener);
 	}
 
 	private static void denconectar() {

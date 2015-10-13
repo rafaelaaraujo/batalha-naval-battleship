@@ -6,11 +6,8 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.rmi.RemoteException;
 
-import batalhanaval.Jogador;
 import batalhanaval.JogadoresServidor;
-import telas.TelaTabuleiroOponente;
 import telas.TelaTabuleiroJogador;
-import enuns.Estado;
 
 public class TratadorMouseJogador implements MouseListener, MouseMotionListener {
 	private TelaTabuleiroJogador painel;

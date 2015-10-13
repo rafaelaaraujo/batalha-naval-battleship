@@ -1,32 +1,17 @@
 package telas;
 
 import java.awt.BorderLayout;
-import java.awt.Button;
 import java.awt.Dimension;
-import java.awt.Frame;
 import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 import java.rmi.RemoteException;
 
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
-import javax.swing.event.InternalFrameAdapter;
-import javax.swing.event.InternalFrameEvent;
 
-import java.util.Timer;
-import java.util.TimerTask;
-
-import Server.Servidor;
-import batalhanaval.Jogador;
 import batalhanaval.JogadoresServidor;
-import enuns.Estado;
 import eventos.Evento;
 
 @SuppressWarnings("serial")
@@ -46,7 +31,6 @@ public class TelaPrincipal extends JFrame {
 		adicionaCaixaEventos();
 		adicionaTabuleiros();
 	}
-	
 
 	private void setWindowListner() {
 		addWindowListener(new java.awt.event.WindowAdapter() {
@@ -67,7 +51,7 @@ public class TelaPrincipal extends JFrame {
 
 		mapa1 = new TelaTabuleiroJogador(this);
 		mapa2 = new TelaTabuleiroOponente();
-	
+
 		mapas.add(mapa1);
 		mapas.add(mapa2);
 		getContentPane().add(mapas, BorderLayout.NORTH);
@@ -82,8 +66,7 @@ public class TelaPrincipal extends JFrame {
 
 		JPanel painelEventos = new JPanel(new GridLayout(1, 1));
 		painelEventos.setPreferredSize(new Dimension(630, 150));
-		painelEventos
-				.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+		painelEventos.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
 		caixaEventos = new JTextArea();
 		JScrollPane rolagemEventos = new JScrollPane(caixaEventos);
@@ -108,6 +91,5 @@ public class TelaPrincipal extends JFrame {
 			e1.printStackTrace();
 		}
 	}
-
 
 }
