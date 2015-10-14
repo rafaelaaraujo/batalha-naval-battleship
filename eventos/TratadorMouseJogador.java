@@ -6,7 +6,7 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.rmi.RemoteException;
 
-import batalhanaval.JogadoresServidor;
+import batalhanaval.JogadorServer;
 import telas.TelaTabuleiroJogador;
 
 public class TratadorMouseJogador implements MouseListener, MouseMotionListener {
@@ -20,7 +20,7 @@ public class TratadorMouseJogador implements MouseListener, MouseMotionListener 
 	public void mousePressed(MouseEvent e) {
 
 		try {
-			if (JogadoresServidor.getJogador().isPosicionandoNavio()) {
+			if (JogadorServer.getJogador().isPosicionandoNavio()) {
 				if (e.getButton() == MouseEvent.BUTTON3) { // Botão direito
 					painel.alteraOrientacaoNavio();
 
@@ -38,7 +38,7 @@ public class TratadorMouseJogador implements MouseListener, MouseMotionListener 
 	public void mouseMoved(MouseEvent e) {
 		painel.posicaoAtual = new Point(e.getX() / 30, e.getY() / 30);
 		try {
-			if (JogadoresServidor.getJogador().isPosicionandoNavio()) {
+			if (JogadorServer.getJogador().isPosicionandoNavio()) {
 				painel.posicionarNavio();
 
 			}

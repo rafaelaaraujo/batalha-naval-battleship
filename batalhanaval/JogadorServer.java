@@ -9,7 +9,7 @@ import enuns.OrientacaoNavio;
 import eventos.Evento;
 import navios.Navio;
 
-public class JogadoresServidor {
+public class JogadorServer {
 
 	public static Servidor servidor;
 	public static Estado jogadorId;

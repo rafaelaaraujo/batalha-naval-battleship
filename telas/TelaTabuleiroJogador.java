@@ -11,7 +11,7 @@ import java.rmi.RemoteException;
 import javax.swing.JPanel;
 
 import batalhanaval.Jogador;
-import batalhanaval.JogadoresServidor;
+import batalhanaval.JogadorServer;
 import batalhanaval.TratarImagens;
 import enuns.OrientacaoNavio;
 import eventos.TratadorMouseJogador;
@@ -37,8 +37,8 @@ public class TelaTabuleiroJogador extends JPanel {
 			principal = p;
 			Dimension dim;
 
-			dim = new Dimension(JogadoresServidor.getJogador().getTabuleiro().getMapa().length * DIM_QUADRADO,
-					JogadoresServidor.getJogador().getTabuleiro().getMapa()[0].length * DIM_QUADRADO);
+			dim = new Dimension(JogadorServer.getJogador().getTabuleiro().getMapa().length * DIM_QUADRADO,
+					JogadorServer.getJogador().getTabuleiro().getMapa()[0].length * DIM_QUADRADO);
 
 			setPreferredSize(dim);
 
@@ -48,7 +48,7 @@ public class TelaTabuleiroJogador extends JPanel {
 			// Atual navio sendo posicionado
 			idNavioAtual = 2;
 			orientacaoAtual = OrientacaoNavio.HORIZONTAL;
-			JogadoresServidor.alteraPosicaoNavio(idNavioAtual, posicaoAtual);
+			JogadorServer.alteraPosicaoNavio(idNavioAtual, posicaoAtual);
 			principal.mostraEventos();
 			principal.mostraEvento("Movimente o navio com o mouse e clique com o "
 					+ "botão esquerdo para posicioná-lo.\n" + "Para mudar a orientação, clique com o botão direito.");
@@ -74,7 +74,7 @@ public class TelaTabuleiroJogador extends JPanel {
 	private void desenhaTiros(Graphics g) {
 		try {
 			Graphics2D g2 = (Graphics2D) g;
-			Jogador jogador = JogadoresServidor.getOponente();
+			Jogador jogador = JogadorServer.getJogador();
 
 			for (Point pt : jogador.getTiros()) {
 				int valor = jogador.getTabuleiro().getValorPosicao(pt.x, pt.y);
@@ -93,7 +93,7 @@ public class TelaTabuleiroJogador extends JPanel {
 
 	private void desenhaFrota(Graphics g) {
 		try {
-			for (Navio navio : JogadoresServidor.getJogador().getFrota()) {
+			for (Navio navio : JogadorServer.getJogador().getFrota()) {
 				if (navio.getPosicao() != null)
 					g.drawImage(tratarImagens.getImagemNavio(navio.getId(), navio.getOrientacao()),
 							navio.getPosicao().x * 30, navio.getPosicao().y * 30, null);
@@ -110,12 +110,12 @@ public class TelaTabuleiroJogador extends JPanel {
 			g.setColor(Color.BLUE);
 			g.drawRect(0, 0, this.getWidth() - 1, this.getHeight() - 1);
 
-			// desenha linahs vertical e horizontal
 			for (int i = 1; i < 20; i++) {
 				g.drawLine(i * 30, 0, i * 30,
-						JogadoresServidor.getJogador().getTabuleiro().getMapa().length * DIM_QUADRADO); // linha
-				// horizontal
-				g.drawLine(0, i * 30, JogadoresServidor.getJogador().getTabuleiro().getMapa().length * DIM_QUADRADO,
+						JogadorServer.getJogador().getTabuleiro().getMapa().length * DIM_QUADRADO); // linha
+																										// horizontal
+
+				g.drawLine(0, i * 30, JogadorServer.getJogador().getTabuleiro().getMapa().length * DIM_QUADRADO,
 						i * 30); // linha vertical
 			}
 
@@ -145,23 +145,20 @@ public class TelaTabuleiroJogador extends JPanel {
 			break;
 		}
 
-		JogadoresServidor.alteraOrientacaoNavio(idNavioAtual, orientacaoAtual);
-		;
+		JogadorServer.alteraOrientacaoNavio(idNavioAtual, orientacaoAtual);
+
 		repaint();
 	}
 
 	public void adicionarNavio() {
 		if (idNavioAtual <= TOTAL_NAVIOS) {
 			try {
-				Navio navio = JogadoresServidor.getJogador().getNavio(idNavioAtual);
-				JogadoresServidor.adicionaNavio(navio);
+				Navio navio = JogadorServer.getJogador().getNavio(idNavioAtual);
+				JogadorServer.adicionaNavio(navio);
 
 				if (idNavioAtual == TOTAL_NAVIOS) {
-					try {
-						JogadoresServidor.retiraEstadoPosicionandoNavio();
-					} catch (RemoteException e) {
-						e.printStackTrace();
-					}
+					JogadorServer.retiraEstadoPosicionandoNavio();
+
 				} else {
 					idNavioAtual++;
 				}
@@ -175,15 +172,15 @@ public class TelaTabuleiroJogador extends JPanel {
 
 	public void posicionarNavio() {
 		try {
-			Point posAntiga = JogadoresServidor.getJogador().getNavio(idNavioAtual).getPosicao();
-			JogadoresServidor.alteraPosicaoNavio(idNavioAtual, posicaoAtual);
-			Jogador jogador = JogadoresServidor.getJogador();
+			Point posAntiga = JogadorServer.getJogador().getNavio(idNavioAtual).getPosicao();
+			JogadorServer.alteraPosicaoNavio(idNavioAtual, posicaoAtual);
+			Jogador jogador = JogadorServer.getJogador();
 			Navio navio = jogador.getNavio(idNavioAtual);
 
 			if (jogador.getTabuleiro().cabeNavio(navio)) {
 				repaint();
 			} else {
-				JogadoresServidor.alteraPosicaoNavio(idNavioAtual, posAntiga);
+				JogadorServer.alteraPosicaoNavio(idNavioAtual, posAntiga);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

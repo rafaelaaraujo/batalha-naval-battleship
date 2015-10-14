@@ -6,7 +6,7 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.rmi.RemoteException;
 
-import batalhanaval.JogadoresServidor;
+import batalhanaval.JogadorServer;
 import telas.TelaTabuleiroOponente;
 
 public class TratadorMouseOponente implements MouseListener, MouseMotionListener {
@@ -19,7 +19,7 @@ public class TratadorMouseOponente implements MouseListener, MouseMotionListener
 	@Override
 	public void mousePressed(MouseEvent e) {
 		try {
-			if (JogadoresServidor.getEstadoJogo() == JogadoresServidor.jogadorId) {
+			if (JogadorServer.getEstadoJogo() == JogadorServer.jogadorId) {
 				painel.adicionarJogada();
 			}
 		} catch (RemoteException e1) {

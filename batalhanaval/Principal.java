@@ -32,13 +32,13 @@ public class Principal {
 	public static void main(String[] args) {
 		try {
 			inicializarServidor();
-			inicializarListenerService();
+			
 
-			if (JogadoresServidor.jogadorId == null) {
+			if (JogadorServer.jogadorId == null) {
 				JOptionPane.showMessageDialog(null, "Já existe um jogo em andamento espere ele terminar");
 			} else {
 
-				if (JogadoresServidor.servidor.oponenteConectado()) {
+				if (JogadorServer.servidor.oponenteConectado()) {
 					iniciaTelaPrincipal();
 				} else {
 					verificarSeOponenteConectou();
@@ -55,15 +55,15 @@ public class Principal {
 	private static void inicializarServidor() throws RemoteException, NotBoundException, AccessException {
 		Registry registry = LocateRegistry.getRegistry("127.0.0.1", 2050);
 		s = (Servidor) registry.lookup("Server");
-		JogadoresServidor.servidor = s;
+		JogadorServer.servidor = s;
 
-		JogadoresServidor.jogadorId = s.conectar();
+		JogadorServer.jogadorId = s.conectar();
 	}
 
-	private static void inicializarListenerService() throws RemoteException {
-		MessageListener listener = new MessageListenerImpl();
+	private static void inicializarListenerService(TelaPrincipal principal) throws RemoteException {
+		MessageListener listener = new MessageListenerImpl(principal);
 		UnicastRemoteObject.exportObject(listener, 0);
-		JogadoresServidor.servidor.addMessageListener(listener);
+		JogadorServer.servidor.addMessageListener(listener);
 	}
 
 	private static void denconectar() {
@@ -75,7 +75,7 @@ public class Principal {
 
 	}
 
-	private static void iniciaTelaPrincipal() {
+	private static void iniciaTelaPrincipal() throws RemoteException {
 		if (timer != null) {
 			timer.cancel();
 			tt.cancel();
@@ -88,6 +88,7 @@ public class Principal {
 		TelaPrincipal principal = new TelaPrincipal();
 		principal.pack();
 		principal.setVisible(true);
+		inicializarListenerService(principal);
 	}
 
 	private static void verificarSeOponenteConectou() {
