@@ -74,13 +74,13 @@ public class TelaTabuleiroJogador extends JPanel {
 	private void desenhaTiros(Graphics g) {
 		try {
 			Graphics2D g2 = (Graphics2D) g;
-			Jogador jogador = JogadorServer.getJogador();
 
-			for (Point pt : jogador.getTiros()) {
-				int valor = jogador.getTabuleiro().getValorPosicao(pt.x, pt.y);
+			for (Point pt : JogadorServer.getOponente().getTiros()) {
+				int valor = JogadorServer.getJogador().getTabuleiro().getValorPosicao(pt.x, pt.y);
 				if (valor == -1) {
 
 					g2.drawImage(tratarImagens.getImagemAgua(), pt.x * 30, pt.y * 30, this);
+					
 
 				} else if (valor < 0) {
 					g2.drawImage(tratarImagens.getImagemFogo(), pt.x * 30, pt.y * 30, this);
@@ -110,7 +110,7 @@ public class TelaTabuleiroJogador extends JPanel {
 			g.setColor(Color.BLUE);
 			g.drawRect(0, 0, this.getWidth() - 1, this.getHeight() - 1);
 
-			for (int i = 1; i < 20; i++) {
+			for (int i = 1; i < 21; i++) {
 				g.drawLine(i * 30, 0, i * 30,
 						JogadorServer.getJogador().getTabuleiro().getMapa().length * DIM_QUADRADO); // linha
 																										// horizontal

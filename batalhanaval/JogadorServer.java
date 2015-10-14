@@ -32,7 +32,7 @@ public class JogadorServer {
 	}
 
 	public static Jogador getOponente() throws RemoteException {
-		Estado estadoOponente = jogadorId == Estado.JOGADOR_1 ? Estado.JOGADOR_2 : Estado.JOGADOR_2;
+		Estado estadoOponente = jogadorId == Estado.JOGADOR_1 ? Estado.JOGADOR_2 : Estado.JOGADOR_1;
 
 		return servidor.getJogador(estadoOponente);
 	}

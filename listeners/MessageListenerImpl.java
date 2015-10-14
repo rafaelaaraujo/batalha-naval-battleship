@@ -15,31 +15,35 @@ public class MessageListenerImpl implements MessageListener {
 	}
 
 	@Override
-	public void message(Estado message) throws RemoteException {
-		switch (message) {
-		case JOGADOR_1:
+	public void message(String msg) throws RemoteException {
+		if(msg.equals("TIRO")){
+			principal.atualizaGrades();
+		}else{
+	switch (msg) {
+		case "JOGADOR_1":
 			principal.atualizaGrades();
 			principal.mostraEvento("Vez do JOGADOR 1 atacar");
 			break;
 
-		case JOGADOR_2:
+		case "JOGADOR_2":
 			principal.atualizaGrades();
 			principal.mostraEvento("Vez do JOGADOR 2 atacar");
 
 			break;
 			
-		case POSICIONANDO_NAVIOS:
+		case "POSICIONANDO_NAVIOS":
 			principal.mostraEvento("É preciso que todos os jogadores posicionem os navios");
 
 			break;
 			
-		case TERMINADO:
+		case "TERMINADO":
 			principal.mostraEvento("JOGO TERMINADO");
 
 
 			break;
 		}
-		principal.mostraEvento(message.toString());
+		}
+		//principal.mostraEvento(message.toString());
 	}
 
 }

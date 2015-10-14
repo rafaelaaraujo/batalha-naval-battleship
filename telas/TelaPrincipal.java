@@ -52,7 +52,7 @@ public class TelaPrincipal extends JFrame {
 		mapas.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
 		mapa1 = new TelaTabuleiroJogador(this);
-		mapa2 = new TelaTabuleiroOponente();
+		mapa2 = new TelaTabuleiroOponente(this);
 
 		mapas.add(mapa1);
 		mapas.add(mapa2);
