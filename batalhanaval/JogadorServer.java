@@ -3,6 +3,7 @@ package batalhanaval;
 import java.awt.Point;
 import java.rmi.RemoteException;
 
+import jogo.Jogador;
 import Server.Servidor;
 import enuns.Estado;
 import enuns.OrientacaoNavio;

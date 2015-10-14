@@ -10,7 +10,7 @@ import java.rmi.RemoteException;
 
 import javax.swing.JPanel;
 
-import batalhanaval.Jogador;
+import jogo.Jogador;
 import batalhanaval.JogadorServer;
 import batalhanaval.TratarImagens;
 import enuns.OrientacaoNavio;

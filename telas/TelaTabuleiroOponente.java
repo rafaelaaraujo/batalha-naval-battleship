@@ -11,12 +11,11 @@ import java.rmi.RemoteException;
 
 import javax.swing.JPanel;
 
-import batalhanaval.Jogador;
+import jogo.Jogador;
 import batalhanaval.JogadorServer;
 import batalhanaval.TratarImagens;
 import enuns.Estado;
 import eventos.TratadorMouseOponente;
-import exceptions.PosicaoJaAtingidaException;
 import navios.Navio;
 
 @SuppressWarnings("serial")
@@ -49,8 +48,6 @@ public class TelaTabuleiroOponente extends JPanel {
 
 			// Quadrado onde o ponteiro está
 			posicaoAtual = new Point(0, 0);
-
-			// principal.mostraEventos();
 
 			tm = new TratadorMouseOponente(this);
 			addMouseListeners();
@@ -127,13 +124,11 @@ public class TelaTabuleiroOponente extends JPanel {
 
 	}
 
-	public int atira(int coluna, int linha) throws PosicaoJaAtingidaException,
-			RemoteException {
+	public int atira(int coluna, int linha) throws RemoteException {
 		int valorAtual = JogadorServer.getOponente().getTabuleiro()
 				.getValorPosicao(coluna, linha);
 
-		if (valorAtual >= 1) { // quando posição é atingida seu valor fica
-								// negativa
+		if (valorAtual >= 1) { // quando posição é atingida seu valor fica negativo
 			JogadorServer.atirarNoOponente(coluna, linha);
 
 			if (valorAtual > 1
@@ -143,7 +138,7 @@ public class TelaTabuleiroOponente extends JPanel {
 			}
 
 		} else {
-			throw new PosicaoJaAtingidaException();
+			return 0;
 		}
 
 		return valorAtual;
@@ -154,8 +149,7 @@ public class TelaTabuleiroOponente extends JPanel {
 	 * Destroi um navio do jogador, subtraindo id de seu total de
 	 * identificadores de navios.
 	 * 
-	 * @param id
-	 *            O identificador do navio destruído.
+	 * @param id O identificador do navio destruído.
 	 */
 	private void destroirNavio(int id) {
 		try {
@@ -183,7 +177,12 @@ public class TelaTabuleiroOponente extends JPanel {
 		try {
 			int res = atira(pos.x, pos.y);
 			repaint();
-			if (res == 1) {
+			
+			if(res == 0){
+				principal.mostraEvento("Está posição já foi atingida!!!");
+				return;
+				
+			}else if (res == 1) {
 				JogadorServer
 						.setEstadoJogo(JogadorServer.jogadorId == Estado.JOGADOR_1 ? Estado.JOGADOR_2
 								: Estado.JOGADOR_1);
@@ -196,8 +195,8 @@ public class TelaTabuleiroOponente extends JPanel {
 					principal.mostraEventos();
 				}
 			}
-		} catch (PosicaoJaAtingidaException | RemoteException ex) {
-			principal.mostraEvento(ex.getMessage());
+		} catch (RemoteException ex) {
+			ex.printStackTrace();
 		}
 	}
 
