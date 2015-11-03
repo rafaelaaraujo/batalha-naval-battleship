@@ -11,7 +11,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
-import batalhanaval.JogadorServer;
+import batalhanaval.Controller;
 import eventos.Evento;
 
 @SuppressWarnings("serial")
@@ -26,8 +26,8 @@ public class TelaPrincipal extends JFrame {
 		getContentPane().setLayout(new BorderLayout());
 		setResizable(false);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
-		
-		setTitle(JogadorServer.jogadorId.toString());
+
+		setTitle(Controller.jogadorId.toString());
 
 		setWindowListner();
 		adicionaCaixaEventos();
@@ -38,12 +38,9 @@ public class TelaPrincipal extends JFrame {
 		addWindowListener(new java.awt.event.WindowAdapter() {
 			@Override
 			public void windowClosing(java.awt.event.WindowEvent windowEvent) {
-				try {
-					JogadorServer.desconectar();
-				} catch (RemoteException e) {
-					e.printStackTrace();
-				}
+					Controller.desconectar();
 			}
+			
 		});
 	}
 
@@ -56,7 +53,7 @@ public class TelaPrincipal extends JFrame {
 
 		mapas.add(mapa1);
 		mapas.add(mapa2);
-		
+
 		getContentPane().add(mapas, BorderLayout.NORTH);
 	}
 
@@ -88,8 +85,9 @@ public class TelaPrincipal extends JFrame {
 	public void mostraEventos() {
 		Evento e;
 		try {
-			e = JogadorServer.getEventos();
-			mostraEvento(e.getMensagem());
+			e = Controller.getEventos();
+			if (e != null)
+				mostraEvento(e.getMensagem());
 		} catch (RemoteException e1) {
 			e1.printStackTrace();
 		}

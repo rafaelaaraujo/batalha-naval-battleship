@@ -2,6 +2,7 @@ package listeners;
 
 import java.rmi.RemoteException;
 
+import batalhanaval.Controller;
 import enuns.Estado;
 import telas.TelaPrincipal;
 
@@ -15,35 +16,58 @@ public class MessageListenerImpl implements MessageListener {
 	}
 
 	@Override
-	public void message(String msg) throws RemoteException {
-		if(msg.equals("TIRO")){
+	public void message(Estado msg) throws RemoteException {
+
+		switch (msg) {
+
+		case NOVO_TIRO:
 			principal.atualizaGrades();
-		}else{
-	switch (msg) {
-		case "JOGADOR_1":
-			principal.atualizaGrades();
-			principal.mostraEvento("Vez do JOGADOR 1 atacar");
 			break;
 
-		case "JOGADOR_2":
+		case JOGADOR_1:
 			principal.atualizaGrades();
-			principal.mostraEvento("Vez do JOGADOR 2 atacar");
+			if (Controller.jogadorId == msg) {
+				principal.mostraEvento("SUA vez de atacar!");
+
+			} else {
+				principal.mostraEvento("Vez do JOGADOR 1 atacar");
+			}
+			break;
+
+		case JOGADOR_2:
+			principal.atualizaGrades();
+			if (Controller.jogadorId == msg) {
+				principal.mostraEvento("SUA vez de atacar!");
+
+			} else {
+				principal.mostraEvento("Vez do JOGADOR 2 atacar");
+			}
 
 			break;
-			
-		case "POSICIONANDO_NAVIOS":
+
+		case POSICIONANDO_NAVIOS:
 			principal.mostraEvento("É preciso que todos os jogadores posicionem os navios");
 
 			break;
-			
-		case "TERMINADO":
-			principal.mostraEvento("JOGO TERMINADO");
 
+		case JOGO_TERMINADO:
+			principal.mostraEvento("JOGO TERMINADO");
+			principal.mostraEventos();
 
 			break;
+
+		case JOGO_INICIADO:
+			principal.mostraEvento("ATENÇÃO JOGO INICIADO");
+			break;
+			
+		case OPONENTE_DESCONECTADO:
+			principal.mostraEvento("ATENÇÃO SEU OPONENTE FOI DESCONECTADO");
+			principal.mostraEvento("Reinicie o jogo.");
+
+			break;
+
 		}
-		}
-		//principal.mostraEvento(message.toString());
 	}
+	// principal.mostraEvento(message.toString());
 
 }

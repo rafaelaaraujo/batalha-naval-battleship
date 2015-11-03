@@ -28,52 +28,49 @@ public class Principal {
 	private static TimerTask tt;
 	private static Estado id;
 	private static JFrame frame;
+	private static String ip;
 
 	public static void main(String[] args) {
 		try {
-			inicializarServidor();
+
+			ip = JOptionPane.showInputDialog("Informe o ip");
 			
-
-			if (JogadorServer.jogadorId == null) {
-				JOptionPane.showMessageDialog(null, "Já existe um jogo em andamento espere ele terminar");
+			if (ip == null || ip.equals("")) {
+				showMessage("É preciso que informe o ip para continuar");
 			} else {
+				inicializarServidor();
 
-				if (JogadorServer.servidor.oponenteConectado()) {
-					iniciaTelaPrincipal();
+				if (Controller.jogadorId == null) {
+					showMessage("Já existe um jogo em andamento espere ele terminar");
 				} else {
-					verificarSeOponenteConectou();
+
+					if (Controller.servidor.oponenteConectado()) {
+						iniciaTelaPrincipal();
+					} else {
+						verificarSeOponenteConectou();
+					}
 				}
 			}
 
-		} catch (RemoteException | NotBoundException e1) {
-			e1.printStackTrace();
-			denconectar();
+		} catch (RemoteException | NotBoundException e1){
+			showMessage("Erro ao conectar no servidor. Verifique o ip e a sua conexao a internet.");
 		}
 
 	}
 
-	private static void inicializarServidor() throws RemoteException, NotBoundException, AccessException {
-		Registry registry = LocateRegistry.getRegistry("127.0.0.1", 2050);
+	private static void inicializarServidor() throws RemoteException, NotBoundException {
+		Registry registry = LocateRegistry.getRegistry(ip, 2050);
 		s = (Servidor) registry.lookup("Server");
-		JogadorServer.servidor = s;
-
-		JogadorServer.jogadorId = s.conectar();
+		Controller.servidor = s;
+		Controller.jogadorId = s.conectar();
 	}
 
 	private static void inicializarListenerService(TelaPrincipal principal) throws RemoteException {
 		MessageListener listener = new MessageListenerImpl(principal);
 		UnicastRemoteObject.exportObject(listener, 0);
-		JogadorServer.servidor.addMessageListener(listener);
+		Controller.servidor.addMessageListener(listener);
 	}
 
-	private static void denconectar() {
-		try {
-			s.desconectar(id);
-		} catch (RemoteException e) {
-			e.printStackTrace();
-		}
-
-	}
 
 	private static void iniciaTelaPrincipal() throws RemoteException {
 		if (timer != null) {
@@ -129,6 +126,10 @@ public class Principal {
 			frame.setVisible(true);
 		}
 
+	}
+	
+	private static void showMessage(String mensagem){
+		JOptionPane.showMessageDialog(null, mensagem);
 	}
 
 }

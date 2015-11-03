@@ -12,7 +12,7 @@ import java.rmi.RemoteException;
 import javax.swing.JPanel;
 
 import jogo.Jogador;
-import batalhanaval.JogadorServer;
+import batalhanaval.Controller;
 import batalhanaval.TratarImagens;
 import enuns.Estado;
 import eventos.TratadorMouseOponente;
@@ -21,7 +21,9 @@ import navios.Navio;
 @SuppressWarnings("serial")
 public class TelaTabuleiroOponente extends JPanel {
 
-	public static final int DIM_QUADRADO = 30;
+	public  final int DIM_QUADRADO = 30;
+	public  final int TAM_MAPA = 15;
+
 
 	public TelaPrincipal principal;
 	private TratarImagens tratarImagens = new TratarImagens();
@@ -38,12 +40,7 @@ public class TelaTabuleiroOponente extends JPanel {
 		try {
 			fundo = tratarImagens.getImagemMar(1);
 
-			dim = new Dimension(JogadorServer.getOponente().getTabuleiro()
-					.getMapa().length
-					* DIM_QUADRADO, JogadorServer.getOponente().getTabuleiro()
-					.getMapa()[0].length
-					* DIM_QUADRADO);
-
+			dim = new Dimension(TAM_MAPA* DIM_QUADRADO, TAM_MAPA* DIM_QUADRADO);
 			setPreferredSize(dim);
 
 			// Quadrado onde o ponteiro está
@@ -75,8 +72,8 @@ public class TelaTabuleiroOponente extends JPanel {
 		try {
 			Graphics2D g2 = (Graphics2D) g;
 
-			for (Point pt : JogadorServer.getJogador().getTiros()) {
-				int valor = JogadorServer.getOponente().getTabuleiro()
+			for (Point pt : Controller.getTiros(Controller.jogadorId)) {
+				int valor = Controller.getOponente().getTabuleiro()
 						.getValorPosicao(pt.x, pt.y);
 				if (valor == -1) {
 
@@ -94,7 +91,7 @@ public class TelaTabuleiroOponente extends JPanel {
 	}
 
 	private void desenhaFrota(Graphics g) throws RemoteException {
-		for (Navio navio : JogadorServer.getOponente().getFrota()) {
+		for (Navio navio : Controller.getOponente().getFrota()) {
 			if (navio.getPosicao() != null)
 				if (navio.estaDestruido())
 					g.drawImage(
@@ -113,26 +110,22 @@ public class TelaTabuleiroOponente extends JPanel {
 
 		for (int i = 1; i < 21; i++) {
 
-			g.drawLine(i * 30, 0, i * 30, JogadorServer.getOponente()
-					.getTabuleiro().getMapa().length
-					* DIM_QUADRADO);
+			g.drawLine(i * 30, 0, i * 30, TAM_MAPA* DIM_QUADRADO);
 			// horizontal
-			g.drawLine(0, i * 30, JogadorServer.getOponente().getTabuleiro()
-					.getMapa().length
-					* DIM_QUADRADO, i * 30); // linha vertical
+			g.drawLine(0, i * 30, TAM_MAPA* DIM_QUADRADO, i * 30); // linha vertical
 		}
 
 	}
 
 	public int atira(int coluna, int linha) throws RemoteException {
-		int valorAtual = JogadorServer.getOponente().getTabuleiro()
+		int valorAtual = Controller.getOponente().getTabuleiro()
 				.getValorPosicao(coluna, linha);
 
 		if (valorAtual >= 1) { // quando posição é atingida seu valor fica negativo
-			JogadorServer.atirarNoOponente(coluna, linha);
+			Controller.atirarNoOponente(coluna, linha);
 
 			if (valorAtual > 1
-					&& JogadorServer.getOponente().getNavio(valorAtual)
+					&& Controller.getOponente().getNavio(valorAtual)
 							.estaDestruido()) {
 				destroirNavio(valorAtual);
 			}
@@ -154,16 +147,12 @@ public class TelaTabuleiroOponente extends JPanel {
 	private void destroirNavio(int id) {
 		try {
 
-			Jogador oponente = JogadorServer.getOponente();
+			Jogador oponente = Controller.getOponente();
 			Navio navio = oponente.getNavio(id);
-			String nomeNavio = "Você afundou o " + navio.getNome().toUpperCase()
-					+ " do adversário!";
+			principal.mostraEvento("Você afundou o " + navio.getNome().toUpperCase() + " do adversário!");
 
-			principal.mostraEvento(nomeNavio);
-			oponente.removerNavio(id);
-
-			if (oponente.getFrotaRestante().size() == 0) {
-				JogadorServer.setEstadoJogo(Estado.TERMINADO);
+			if (!oponente.navioRestante()) {
+				Controller.setEstadoJogo(Estado.JOGO_TERMINADO);
 			}
 
 		} catch (RemoteException e) {
@@ -183,17 +172,10 @@ public class TelaTabuleiroOponente extends JPanel {
 				return;
 				
 			}else if (res == 1) {
-				JogadorServer
-						.setEstadoJogo(JogadorServer.jogadorId == Estado.JOGADOR_1 ? Estado.JOGADOR_2
-								: Estado.JOGADOR_1);
+				Controller.setEstadoJogo(Controller.getIdOponente());
 
 			} else if (res > 1) {
-				if (JogadorServer.getOponente().getNavio(res).estaDestruido()) {
-					principal.mostraEventos();
-				}
-				if (JogadorServer.getEstadoJogo() == Estado.TERMINADO) {
-					principal.mostraEventos();
-				}
+				principal.mostraEventos();
 			}
 		} catch (RemoteException ex) {
 			ex.printStackTrace();
