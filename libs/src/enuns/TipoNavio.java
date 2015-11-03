@@ -1,0 +1,5 @@
+package enuns;
+
+public enum TipoNavio {
+	BARCO_PATRULHA, DESTROIER, SUBMARINO, ENCOURACADO, PORTA_AVIOES
+}
