@@ -17,17 +17,6 @@ public class Controller {
 	public static Servidor servidor;
 	public static Estado jogadorId;
 
-	public static Jogador getJogador() {
-		try {
-			return servidor.getJogador(jogadorId);
-		} catch (ErroServidorException e) {
-			e.mostrarAlerta();
-			throw new RuntimeException(e);
-		} catch (RemoteException e) {
-			throw new RuntimeException(e);
-		}
-	}
-
 	public static void setEstadoJogo(Estado estado) {
 		try {
 			servidor.setEstadoJogo(estado);
@@ -62,11 +51,11 @@ public class Controller {
 	}
 
 	public static Estado getIdOponente() {
-		return jogadorId == Estado.JOGADOR_1 ? Estado.JOGADOR_2 : Estado.JOGADOR_1;
+		return jogadorId == Estado.JOGADOR_1 ? Estado.JOGADOR_2
+				: Estado.JOGADOR_1;
 	}
 
-	
-	public static void desconectar(){
+	public static void desconectar() {
 		try {
 			servidor.desconectar(jogadorId);
 		} catch (ErroServidorException e) {
@@ -98,7 +87,7 @@ public class Controller {
 		}
 	}
 
-	public static void alteraPosicaoNavio(int idNavio, Point posicao){
+	public static void alteraPosicaoNavio(int idNavio, Point posicao) {
 		try {
 			servidor.alteraPosicaoDoNavio(jogadorId, idNavio, posicao);
 		} catch (ErroServidorException e) {
@@ -108,7 +97,8 @@ public class Controller {
 		}
 	}
 
-	public static void alteraOrientacaoNavio(int idNavio, OrientacaoNavio orientacao){
+	public static void alteraOrientacaoNavio(int idNavio,
+			OrientacaoNavio orientacao) {
 		try {
 			servidor.alteraOrientacaoNavio(jogadorId, idNavio, orientacao);
 		} catch (ErroServidorException e) {
@@ -119,7 +109,7 @@ public class Controller {
 		}
 	}
 
-	public static void adicionaNavio(Navio navio){
+	public static void adicionaNavio(Navio navio) {
 		try {
 			servidor.adicionaNavioTabuleiro(jogadorId, navio);
 		} catch (ErroServidorException e) {
@@ -134,6 +124,17 @@ public class Controller {
 			servidor.atirarNoOponente(jogadorId, coluna, linha);
 		} catch (ErroServidorException e) {
 			e.mostrarAlerta();
+		} catch (RemoteException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	public static Jogador getJogador() {
+		try {
+			return servidor.getJogador(jogadorId);
+		} catch (ErroServidorException e) {
+			e.mostrarAlerta();
+			throw new RuntimeException(e);
 		} catch (RemoteException e) {
 			throw new RuntimeException(e);
 		}

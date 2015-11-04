@@ -36,7 +36,7 @@ public abstract class Navio implements Serializable {
 	 * @throws NullPointerException
 	 *             Se o navio ainda não estiver posicionado.
 	 */
-	public Point[] getArrayPosicao() throws NullPointerException {
+	public Point[] getArrayPosicao(){
 		Point[] arrayPos = new Point[getTamanho()];
 		int i = posicao.x;
 		int j = posicao.y;
@@ -80,7 +80,7 @@ public abstract class Navio implements Serializable {
 
 	public boolean estaDestruido() {
 		for (Point p : getArrayPosicao()) {
-			if (jogador.getTabuleiro().getValorPosicao(p.x, p.y) > 0) {
+			if (jogador.getValorPosicao(p.x, p.y) > 0) {
 				return false;
 			}
 		}

@@ -42,6 +42,13 @@ public interface Servidor extends Remote {
 
 	public void adicionaNavioTabuleiro(Estado idJogador, Navio navio) throws ErroServidorException, RemoteException;
 
+	public List<Navio> getFrota(Estado idJogador) throws ErroServidorException, RemoteException;
+	
+	public boolean posicioanandoNavio(Estado idJogador) throws ErroServidorException, RemoteException;
+
 	public void atirarNoOponente(Estado idJogadorAtual, int coluna, int linha) throws ErroServidorException, RemoteException;
+
+
+
 	
 }

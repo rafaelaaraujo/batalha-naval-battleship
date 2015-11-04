@@ -1,9 +1,7 @@
 package batalhanaval;
 
 import java.awt.Dimension;
-import java.rmi.AccessException;
 import java.rmi.NotBoundException;
-import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
@@ -15,12 +13,11 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import Server.Servidor;
-import enuns.Estado;
-import exception.ErroServidorException;
 import listeners.MessageListener;
 import listeners.MessageListenerImpl;
 import telas.TelaPrincipal;
+import Server.Servidor;
+import enuns.Estado;
 
 public class Principal {
 

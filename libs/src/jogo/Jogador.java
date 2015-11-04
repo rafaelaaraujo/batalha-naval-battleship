@@ -115,4 +115,8 @@ public class Jogador implements Serializable {
 	public void adicionaNavio(Navio navio) {
 		tabuleiro.adicionaNavio(navio);
 	}
+
+	public int getValorPosicao(int x, int y) {
+		return tabuleiro.getValorPosicao(x, y);
+	}
 }

@@ -25,7 +25,7 @@ public class Tabuleiro implements Serializable {
 	 * @param navio
 	 * @throws NullPointerException Se o navio não estiver ainda posicionado.
 	 */
-	public void adicionaNavio(Navio navio) throws NullPointerException {
+	public void adicionaNavio(Navio navio){
 		for (Point p : navio.getArrayPosicao()) {
 			mapa[p.x][p.y] = navio.getId();
 		}

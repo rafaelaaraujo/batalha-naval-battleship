@@ -1,5 +1,7 @@
 package listeners;
 
+import java.rmi.RemoteException;
+
 import telas.TelaPrincipal;
 import batalhanaval.Controller;
 import enuns.Estado;
@@ -15,7 +17,7 @@ public class MessageListenerImpl implements MessageListener {
 	}
 
 	@Override
-	public void message(Estado msg) throws ErroServidorException {
+	public void message(Estado msg) throws RemoteException {
 
 		switch (msg) {
 
