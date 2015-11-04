@@ -17,9 +17,15 @@ public class Controller {
 	public static Servidor servidor;
 	public static Estado jogadorId;
 
-	public static 
-	Jogador getJogador() throws ErroServidorException {
-		return servidor.getJogador(jogadorId);
+	public static Jogador getJogador() {
+		try {
+			return servidor.getJogador(jogadorId);
+		} catch (ErroServidorException e) {
+			e.mostrarAlerta();
+			throw new RuntimeException(e);
+		} catch (RemoteException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	public static void setEstadoJogo(Estado estado) {
@@ -27,16 +33,32 @@ public class Controller {
 			servidor.setEstadoJogo(estado);
 		} catch (ErroServidorException e) {
 			e.mostrarAlerta();
+		} catch (RemoteException e) {
+			throw new RuntimeException(e);
 		}
 	}
 
-	public static Estado getEstadoJogo() throws ErroServidorException {
-		return servidor.getEstadoJogo();
+	public static Estado getEstadoJogo() {
+		try {
+			return servidor.getEstadoJogo();
+		} catch (ErroServidorException e) {
+			e.mostrarAlerta();
+			throw new RuntimeException(e);
+		} catch (RemoteException e) {
+			throw new RuntimeException(e);
+		}
 
 	}
 
-	public static Jogador getOponente() throws ErroServidorException {
-		return servidor.getJogador(getIdOponente());
+	public static Jogador getOponente() {
+		try {
+			return servidor.getJogador(getIdOponente());
+		} catch (ErroServidorException e) {
+			e.mostrarAlerta();
+			throw new RuntimeException(e);
+		} catch (RemoteException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	public static Estado getIdOponente() {
@@ -49,15 +71,31 @@ public class Controller {
 			servidor.desconectar(jogadorId);
 		} catch (ErroServidorException e) {
 			e.mostrarAlerta();
+			throw new RuntimeException(e);
+		} catch (RemoteException e) {
+			throw new RuntimeException(e);
 		}
 	}
 
-	public static Evento getEventos() throws ErroServidorException {
-		return servidor.getJogo().getEvento();
+	public static Evento getEventos() {
+		try {
+			return servidor.getJogo().getEvento();
+		} catch (ErroServidorException e) {
+			e.mostrarAlerta();
+			throw new RuntimeException(e);
+		} catch (RemoteException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
-	public static void retiraEstadoPosicionandoNavio() throws ErroServidorException {
-		servidor.retiraEstadoAdicionandoNavio(jogadorId);
+	public static void retiraEstadoPosicionandoNavio() {
+		try {
+			servidor.retiraEstadoAdicionandoNavio(jogadorId);
+		} catch (ErroServidorException e) {
+			e.mostrarAlerta();
+		} catch (RemoteException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	public static void alteraPosicaoNavio(int idNavio, Point posicao){
@@ -65,6 +103,8 @@ public class Controller {
 			servidor.alteraPosicaoDoNavio(jogadorId, idNavio, posicao);
 		} catch (ErroServidorException e) {
 			e.mostrarAlerta();
+		} catch (RemoteException e) {
+			throw new RuntimeException(e);
 		}
 	}
 
@@ -72,7 +112,10 @@ public class Controller {
 		try {
 			servidor.alteraOrientacaoNavio(jogadorId, idNavio, orientacao);
 		} catch (ErroServidorException e) {
-			e.printStackTrace();
+			e.mostrarAlerta();
+			throw new RuntimeException(e);
+		} catch (RemoteException e) {
+			throw new RuntimeException(e);
 		}
 	}
 
@@ -81,6 +124,8 @@ public class Controller {
 			servidor.adicionaNavioTabuleiro(jogadorId, navio);
 		} catch (ErroServidorException e) {
 			e.mostrarAlerta();
+		} catch (RemoteException e) {
+			throw new RuntimeException(e);
 		}
 	}
 
@@ -89,11 +134,20 @@ public class Controller {
 			servidor.atirarNoOponente(jogadorId, coluna, linha);
 		} catch (ErroServidorException e) {
 			e.mostrarAlerta();
+		} catch (RemoteException e) {
+			throw new RuntimeException(e);
 		}
 	}
 
-	public static List<Point> getTiros(Estado id) throws ErroServidorException {
-		return servidor.getTiros(id);
+	public static List<Point> getTiros(Estado id) {
+		try {
+			return servidor.getTiros(id);
+		} catch (ErroServidorException e) {
+			e.mostrarAlerta();
+			throw new RuntimeException(e);
+		} catch (RemoteException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 }

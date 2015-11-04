@@ -38,13 +38,9 @@ public class TratadorMouseJogador implements MouseListener, MouseMotionListener 
 	@Override
 	public void mouseMoved(MouseEvent e) {
 		painel.posicaoAtual = new Point(e.getX() / 30, e.getY() / 30);
-		try {
-			if (Controller.getJogador().isPosicionandoNavio()) {
-				painel.posicionarNavio();
+		if (Controller.getJogador().isPosicionandoNavio()) {
+			painel.posicionarNavio();
 
-			}
-		} catch (ErroServidorException e1) {
-			e1.mostrarAlerta();
 		}
 	}
 

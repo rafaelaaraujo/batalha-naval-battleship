@@ -20,14 +20,10 @@ public class TratadorMouseOponente implements MouseListener, MouseMotionListener
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-		try {
-			if (Controller.getEstadoJogo() == Controller.jogadorId) {
-				painel.adicionarJogada();
-			}else if(Controller.getEstadoJogo() != Estado.JOGO_TERMINADO  && Controller.getEstadoJogo() != Estado.OPONENTE_DESCONECTADO ){
-				painel.principal.mostraEvento("Aguarde sua vez de jogar");
-			}
-		} catch (ErroServidorException e1) {
-			e1.mostrarAlerta();
+		if (Controller.getEstadoJogo() == Controller.jogadorId) {
+			painel.adicionarJogada();
+		}else if(Controller.getEstadoJogo() != Estado.JOGO_TERMINADO  && Controller.getEstadoJogo() != Estado.OPONENTE_DESCONECTADO ){
+			painel.principal.mostraEvento("Aguarde sua vez de jogar");
 		}
 	}
 

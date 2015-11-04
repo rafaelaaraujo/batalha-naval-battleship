@@ -48,8 +48,8 @@ public class TelaTabuleiroOponente extends JPanel {
 
 			tm = new TratadorMouseOponente(this);
 			addMouseListeners();
-		} catch (ErroServidorException e) {
-			e.mostrarAlerta();
+		/*} catch (ErroServidorException e) {
+			e.mostrarAlerta();*/
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -145,18 +145,12 @@ public class TelaTabuleiroOponente extends JPanel {
 	 * @param id O identificador do navio destruído.
 	 */
 	private void destroirNavio(int id) {
-		try {
+		Jogador oponente = Controller.getOponente();
+		Navio navio = oponente.getNavio(id);
+		principal.mostraEvento("Você afundou o " + navio.getNome().toUpperCase() + " do adversário!");
 
-			Jogador oponente = Controller.getOponente();
-			Navio navio = oponente.getNavio(id);
-			principal.mostraEvento("Você afundou o " + navio.getNome().toUpperCase() + " do adversário!");
-
-			if (!oponente.navioRestante()) {
-				Controller.setEstadoJogo(Estado.JOGO_TERMINADO);
-			}
-
-		} catch (ErroServidorException e) {
-			e.mostrarAlerta();
+		if (!oponente.navioRestante()) {
+			Controller.setEstadoJogo(Estado.JOGO_TERMINADO);
 		}
 	}
 

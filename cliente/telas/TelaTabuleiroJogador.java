@@ -81,22 +81,16 @@ public class TelaTabuleiroJogador extends JPanel {
 					g2.drawImage(tratarImagens.getImagemFogo(), pt.x * 30, pt.y * 30, this);
 				}
 			}
-		} catch (ErroServidorException  e) {
-			e.mostrarAlerta();
-		}catch (IOException e) {
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
 	private void desenhaFrota(Graphics g) {
-		try {
-			for (Navio navio : Controller.getJogador().getFrota()) {
-				if (navio.getPosicao() != null)
-					g.drawImage(tratarImagens.getImagemNavio(navio.getId(), navio.getOrientacao()),
-							navio.getPosicao().x * 30, navio.getPosicao().y * 30, null);
-			}
-		} catch (ErroServidorException e) {
-			e.mostrarAlerta();
+		for (Navio navio : Controller.getJogador().getFrota()) {
+			if (navio.getPosicao() != null)
+				g.drawImage(tratarImagens.getImagemNavio(navio.getId(), navio.getOrientacao()),
+						navio.getPosicao().x * 30, navio.getPosicao().y * 30, null);
 		}
 	}
 
@@ -162,8 +156,6 @@ public class TelaTabuleiroJogador extends JPanel {
 				}
 			} catch (NullPointerException npe) {
 				npe.printStackTrace();
-			} catch (ErroServidorException e) {
-				e.mostrarAlerta();
 			}
 		}
 	}
