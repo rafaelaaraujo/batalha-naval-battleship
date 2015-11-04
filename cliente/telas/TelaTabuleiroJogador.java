@@ -6,7 +6,6 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.io.IOException;
-import java.rmi.RemoteException;
 
 import javax.swing.JPanel;
 
@@ -16,6 +15,7 @@ import batalhanaval.TratarImagens;
 import enuns.Estado;
 import enuns.OrientacaoNavio;
 import eventos.TratadorMouseJogador;
+import exception.ErroServidorException;
 import navios.Navio;
 
 public class TelaTabuleiroJogador extends JPanel {
@@ -30,7 +30,6 @@ public class TelaTabuleiroJogador extends JPanel {
 	private TratarImagens tratarImagens = new TratarImagens();
 
 	private int idNavioAtual = 2;
-	private OrientacaoNavio orientacaoAtual;
 	public Point posicaoAtual;
 
 	private TratadorMouseJogador tm;
@@ -48,7 +47,6 @@ public class TelaTabuleiroJogador extends JPanel {
 
 			// Atual navio sendo posicionado
 			idNavioAtual = 2;
-			orientacaoAtual = OrientacaoNavio.HORIZONTAL;
 			Controller.alteraPosicaoNavio(idNavioAtual, posicaoAtual);
 			principal.mostraEventos();
 			principal.mostraEvento("**Movimente o navio com o mouse e clique com o "
@@ -83,7 +81,9 @@ public class TelaTabuleiroJogador extends JPanel {
 					g2.drawImage(tratarImagens.getImagemFogo(), pt.x * 30, pt.y * 30, this);
 				}
 			}
-		} catch (IOException e) {
+		} catch (ErroServidorException  e) {
+			e.mostrarAlerta();
+		}catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
@@ -95,8 +95,8 @@ public class TelaTabuleiroJogador extends JPanel {
 					g.drawImage(tratarImagens.getImagemNavio(navio.getId(), navio.getOrientacao()),
 							navio.getPosicao().x * 30, navio.getPosicao().y * 30, null);
 			}
-		} catch (RemoteException e) {
-			e.printStackTrace();
+		} catch (ErroServidorException e) {
+			e.mostrarAlerta();
 		}
 	}
 
@@ -117,9 +117,10 @@ public class TelaTabuleiroJogador extends JPanel {
 		}
 	}
 
-	public void alteraOrientacaoNavio() throws RemoteException {
-		OrientacaoNavio orientacaoAntiga = orientacaoAtual;
-
+	public void alteraOrientacaoNavio() throws ErroServidorException {
+		OrientacaoNavio orientacaoAntiga = Controller.getJogador().getNavio(idNavioAtual).getOrientacao();
+		OrientacaoNavio orientacaoAtual;
+		
 		switch (orientacaoAntiga) {
 
 		case HORIZONTAL:
@@ -135,6 +136,7 @@ public class TelaTabuleiroJogador extends JPanel {
 			break;
 
 		default:
+			orientacaoAtual = OrientacaoNavio.HORIZONTAL;
 			break;
 		}
 
@@ -160,8 +162,8 @@ public class TelaTabuleiroJogador extends JPanel {
 				}
 			} catch (NullPointerException npe) {
 				npe.printStackTrace();
-			} catch (RemoteException e) {
-				e.printStackTrace();
+			} catch (ErroServidorException e) {
+				e.mostrarAlerta();
 			}
 		}
 	}

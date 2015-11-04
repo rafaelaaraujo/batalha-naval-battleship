@@ -17,6 +17,7 @@ import javax.swing.JTextField;
 
 import Server.Servidor;
 import enuns.Estado;
+import exception.ErroServidorException;
 import listeners.MessageListener;
 import listeners.MessageListenerImpl;
 import telas.TelaPrincipal;
@@ -52,27 +53,27 @@ public class Principal {
 				}
 			}
 
-		} catch (RemoteException | NotBoundException e1){
+		} catch (Exception e1){
 			showMessage("Erro ao conectar no servidor. Verifique o ip e a sua conexao a internet.");
 		}
 
 	}
 
-	private static void inicializarServidor() throws RemoteException, NotBoundException {
+	private static void inicializarServidor() throws Exception, NotBoundException {
 		Registry registry = LocateRegistry.getRegistry(ip, 2050);
 		s = (Servidor) registry.lookup("Server");
 		Controller.servidor = s;
 		Controller.jogadorId = s.conectar();
 	}
 
-	private static void inicializarListenerService(TelaPrincipal principal) throws RemoteException {
+	private static void inicializarListenerService(TelaPrincipal principal) throws Exception {
 		MessageListener listener = new MessageListenerImpl(principal);
 		UnicastRemoteObject.exportObject(listener, 0);
 		Controller.servidor.addMessageListener(listener);
 	}
 
 
-	private static void iniciaTelaPrincipal() throws RemoteException {
+	private static void iniciaTelaPrincipal() throws Exception {
 		if (timer != null) {
 			timer.cancel();
 			tt.cancel();
@@ -100,7 +101,7 @@ public class Principal {
 						mostrarAlertaAguardandoOponente();
 					}
 
-				} catch (RemoteException e) {
+				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			};

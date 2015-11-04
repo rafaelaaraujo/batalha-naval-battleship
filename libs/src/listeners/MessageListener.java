@@ -2,12 +2,11 @@ package listeners;
 
 import java.io.Serializable;
 import java.rmi.Remote;
-import java.rmi.RemoteException;
-
 import enuns.Estado;
+import exception.ErroServidorException;
 
 public interface MessageListener extends Serializable, Remote {
 
-	public void message(Estado msg) throws RemoteException;
+	public void message(Estado msg) throws ErroServidorException;
 
 }

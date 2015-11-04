@@ -7,7 +7,6 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
 import java.io.IOException;
-import java.rmi.RemoteException;
 
 import javax.swing.JPanel;
 
@@ -16,6 +15,7 @@ import batalhanaval.Controller;
 import batalhanaval.TratarImagens;
 import enuns.Estado;
 import eventos.TratadorMouseOponente;
+import exception.ErroServidorException;
 import navios.Navio;
 
 @SuppressWarnings("serial")
@@ -48,8 +48,8 @@ public class TelaTabuleiroOponente extends JPanel {
 
 			tm = new TratadorMouseOponente(this);
 			addMouseListeners();
-		} catch (RemoteException e) {
-			e.printStackTrace();
+		} catch (ErroServidorException e) {
+			e.mostrarAlerta();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -62,8 +62,8 @@ public class TelaTabuleiroOponente extends JPanel {
 			desenhaTabuleiro(g);
 			desenhaFrota(g);
 			desenhaTiros(g);
-		} catch (RemoteException e) {
-			e.printStackTrace();
+		} catch (ErroServidorException e) {
+			e.mostrarAlerta();
 		}
 
 	}
@@ -90,7 +90,7 @@ public class TelaTabuleiroOponente extends JPanel {
 		}
 	}
 
-	private void desenhaFrota(Graphics g) throws RemoteException {
+	private void desenhaFrota(Graphics g) throws ErroServidorException {
 		for (Navio navio : Controller.getOponente().getFrota()) {
 			if (navio.getPosicao() != null)
 				if (navio.estaDestruido())
@@ -102,7 +102,7 @@ public class TelaTabuleiroOponente extends JPanel {
 		}
 	}
 
-	private void desenhaTabuleiro(Graphics g) throws RemoteException {
+	private void desenhaTabuleiro(Graphics g) throws ErroServidorException {
 
 		g.drawImage(fundo, 0, 0, null);
 		g.setColor(Color.BLUE);
@@ -117,7 +117,7 @@ public class TelaTabuleiroOponente extends JPanel {
 
 	}
 
-	public int atira(int coluna, int linha) throws RemoteException {
+	public int atira(int coluna, int linha) throws ErroServidorException {
 		int valorAtual = Controller.getOponente().getTabuleiro()
 				.getValorPosicao(coluna, linha);
 
@@ -155,8 +155,8 @@ public class TelaTabuleiroOponente extends JPanel {
 				Controller.setEstadoJogo(Estado.JOGO_TERMINADO);
 			}
 
-		} catch (RemoteException e) {
-			e.printStackTrace();
+		} catch (ErroServidorException e) {
+			e.mostrarAlerta();
 		}
 	}
 
@@ -177,8 +177,8 @@ public class TelaTabuleiroOponente extends JPanel {
 			} else if (res > 1) {
 				principal.mostraEventos();
 			}
-		} catch (RemoteException ex) {
-			ex.printStackTrace();
+		} catch (ErroServidorException ex) {
+			ex.mostrarAlerta();
 		}
 	}
 

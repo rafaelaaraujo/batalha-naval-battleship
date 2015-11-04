@@ -88,7 +88,7 @@ public class TelaPrincipal extends JFrame {
 			e = Controller.getEventos();
 			if (e != null)
 				mostraEvento(e.getMensagem());
-		} catch (RemoteException e1) {
+		} catch (Exception e1) {
 			e1.printStackTrace();
 		}
 	}

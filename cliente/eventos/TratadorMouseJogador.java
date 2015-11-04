@@ -6,6 +6,7 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.rmi.RemoteException;
 
+import exception.ErroServidorException;
 import batalhanaval.Controller;
 import telas.TelaTabuleiroJogador;
 
@@ -28,8 +29,8 @@ public class TratadorMouseJogador implements MouseListener, MouseMotionListener 
 					painel.adicionarNavio();
 				}
 			}
-		} catch (RemoteException e1) {
-			e1.printStackTrace();
+		} catch (ErroServidorException e1) {
+			e1.mostrarAlerta();
 		}
 
 	}
@@ -42,8 +43,8 @@ public class TratadorMouseJogador implements MouseListener, MouseMotionListener 
 				painel.posicionarNavio();
 
 			}
-		} catch (RemoteException e1) {
-			e1.printStackTrace();
+		} catch (ErroServidorException e1) {
+			e1.mostrarAlerta();
 		}
 	}
 

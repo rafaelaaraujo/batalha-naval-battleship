@@ -13,6 +13,7 @@ import jogo.Jogador;
 import jogo.Jogo;
 import enuns.Estado;
 import enuns.OrientacaoNavio;
+import exception.ErroServidorException;
 import listeners.MessageListener;
 import navios.Navio;
 
@@ -23,7 +24,7 @@ public class ServidorImpl extends UnicastRemoteObject implements Servidor {
 	private Jogo jogo;
 	private List<MessageListener> messageListeners;
 
-	protected ServidorImpl() throws RemoteException {
+	protected ServidorImpl() throws Exception {
 		super();
 	}
 
@@ -43,7 +44,7 @@ public class ServidorImpl extends UnicastRemoteObject implements Servidor {
 		}
 	}
 
-	public Estado conectar() throws RemoteException {
+	public Estado conectar() throws ErroServidorException {
 		if (jogo == null) {
 			jogo = new Jogo();
 		}
@@ -64,7 +65,7 @@ public class ServidorImpl extends UnicastRemoteObject implements Servidor {
 
 	}
 
-	public void desconectar(Estado e) throws RemoteException {
+	public void desconectar(Estado e) throws ErroServidorException {
 
 		Iterator<Jogador> jogadores = jogo.getJogadores().iterator();
 		while (jogadores.hasNext()) {
@@ -84,7 +85,7 @@ public class ServidorImpl extends UnicastRemoteObject implements Servidor {
 	}
 
 	@Override
-	public void setEstadoJogo(Estado estado) throws RemoteException {
+	public void setEstadoJogo(Estado estado) throws ErroServidorException {
 		jogo.setEstado(estado);
 		sendMessages(estado);
 	}
@@ -125,7 +126,7 @@ public class ServidorImpl extends UnicastRemoteObject implements Servidor {
 	}
 
 	@Override
-	public void retiraEstadoAdicionandoNavio(Estado estado) throws RemoteException {
+	public void retiraEstadoAdicionandoNavio(Estado estado) throws ErroServidorException {
 
 		getJogador(estado).setPosicionandoNavio(false);
 		for (Jogador j : jogo.getJogadores()) {
@@ -156,7 +157,7 @@ public class ServidorImpl extends UnicastRemoteObject implements Servidor {
 	}
 
 	@Override
-	public void atirarNoOponente(Estado idJogadorAtual, int coluna, int linha) throws RemoteException {
+	public void atirarNoOponente(Estado idJogadorAtual, int coluna, int linha) throws ErroServidorException {
 		Jogador jogador = getJogador(idJogadorAtual);
 		Jogador oponente = getJogador(getIdOponente(idJogadorAtual));
 
@@ -173,14 +174,14 @@ public class ServidorImpl extends UnicastRemoteObject implements Servidor {
 	}
 
 	@Override
-	public void addMessageListener(MessageListener messageListener) throws RemoteException {
+	public void addMessageListener(MessageListener messageListener) throws ErroServidorException {
 		if (messageListeners == null) {
 			messageListeners = new ArrayList<>();
 		}
 		messageListeners.add(messageListener);
 	}
 
-	public void sendMessages(Estado msg) throws RemoteException {
+	public void sendMessages(Estado msg) throws ErroServidorException {
 		for (MessageListener listener : messageListeners) {
 			listener.message(msg);
 		}
