@@ -4,12 +4,13 @@ import java.awt.Point;
 import java.rmi.RemoteException;
 import java.util.List;
 
+import javax.swing.JOptionPane;
+
 import jogo.Jogador;
 import Server.Servidor;
 import enuns.Estado;
 import enuns.OrientacaoNavio;
 import eventos.Evento;
-import exception.ErroServidorException;
 import navios.Navio;
 
 public class Controller {
@@ -20,34 +21,20 @@ public class Controller {
 	public static void setEstadoJogo(Estado estado) {
 		try {
 			servidor.setEstadoJogo(estado);
-		} catch (ErroServidorException e) {
-			e.mostrarAlerta();
+
 		} catch (RemoteException e) {
-			throw new RuntimeException(e);
+			mostrarAlerta();
 		}
 	}
 
-	public static Estado getEstadoJogo() {
-		try {
-			return servidor.getEstadoJogo();
-		} catch (ErroServidorException e) {
-			e.mostrarAlerta();
-			throw new RuntimeException(e);
-		} catch (RemoteException e) {
-			throw new RuntimeException(e);
-		}
+	public static Estado getEstadoJogo() throws RemoteException {
+		return servidor.getEstadoJogo();
 
 	}
 
-	public static Jogador getOponente() {
-		try {
-			return servidor.getJogador(getIdOponente());
-		} catch (ErroServidorException e) {
-			e.mostrarAlerta();
-			throw new RuntimeException(e);
-		} catch (RemoteException e) {
-			throw new RuntimeException(e);
-		}
+	public static Jogador getOponente() throws RemoteException {
+		return servidor.getJogador(getIdOponente());
+
 	}
 
 	public static Estado getIdOponente() {
@@ -58,42 +45,32 @@ public class Controller {
 	public static void desconectar() {
 		try {
 			servidor.desconectar(jogadorId);
-		} catch (ErroServidorException e) {
-			e.mostrarAlerta();
-			throw new RuntimeException(e);
+
 		} catch (RemoteException e) {
-			throw new RuntimeException(e);
+			mostrarAlerta();
 		}
 	}
 
-	public static Evento getEventos() {
-		try {
-			return servidor.getJogo().getEvento();
-		} catch (ErroServidorException e) {
-			e.mostrarAlerta();
-			throw new RuntimeException(e);
-		} catch (RemoteException e) {
-			throw new RuntimeException(e);
-		}
+	public static Evento getEventos() throws RemoteException {
+		return servidor.getJogo().getEvento();
+
 	}
 
 	public static void retiraEstadoPosicionandoNavio() {
 		try {
 			servidor.retiraEstadoAdicionandoNavio(jogadorId);
-		} catch (ErroServidorException e) {
-			e.mostrarAlerta();
+
 		} catch (RemoteException e) {
-			throw new RuntimeException(e);
+			mostrarAlerta();
 		}
 	}
 
 	public static void alteraPosicaoNavio(int idNavio, Point posicao) {
 		try {
 			servidor.alteraPosicaoDoNavio(jogadorId, idNavio, posicao);
-		} catch (ErroServidorException e) {
-			e.mostrarAlerta();
+
 		} catch (RemoteException e) {
-			throw new RuntimeException(e);
+			mostrarAlerta();
 		}
 	}
 
@@ -101,54 +78,45 @@ public class Controller {
 			OrientacaoNavio orientacao) {
 		try {
 			servidor.alteraOrientacaoNavio(jogadorId, idNavio, orientacao);
-		} catch (ErroServidorException e) {
-			e.mostrarAlerta();
-			throw new RuntimeException(e);
+
 		} catch (RemoteException e) {
-			throw new RuntimeException(e);
+			mostrarAlerta();
 		}
 	}
 
 	public static void adicionaNavio(Navio navio) {
 		try {
 			servidor.adicionaNavioTabuleiro(jogadorId, navio);
-		} catch (ErroServidorException e) {
-			e.mostrarAlerta();
+
 		} catch (RemoteException e) {
-			throw new RuntimeException(e);
+			mostrarAlerta();
 		}
 	}
 
 	public static void atirarNoOponente(int coluna, int linha) {
 		try {
 			servidor.atirarNoOponente(jogadorId, coluna, linha);
-		} catch (ErroServidorException e) {
-			e.mostrarAlerta();
+
 		} catch (RemoteException e) {
-			throw new RuntimeException(e);
+			mostrarAlerta();
 		}
 	}
 
-	public static Jogador getJogador() {
-		try {
-			return servidor.getJogador(jogadorId);
-		} catch (ErroServidorException e) {
-			e.mostrarAlerta();
-			throw new RuntimeException(e);
-		} catch (RemoteException e) {
-			throw new RuntimeException(e);
-		}
+	public static Jogador getJogador() throws RemoteException {
+		return servidor.getJogador(jogadorId);
+
 	}
 
-	public static List<Point> getTiros(Estado id) {
-		try {
-			return servidor.getTiros(id);
-		} catch (ErroServidorException e) {
-			e.mostrarAlerta();
-			throw new RuntimeException(e);
-		} catch (RemoteException e) {
-			throw new RuntimeException(e);
-		}
+	public static List<Point> getTiros(Estado id) throws RemoteException {
+		return servidor.getTiros(id);
+
+	}
+
+	public static void mostrarAlerta() {
+		JOptionPane
+				.showMessageDialog(
+						null,
+						"Não foi possivel estabelecer conexão com o servidor do jogo, verifique sua internet");
 	}
 
 }

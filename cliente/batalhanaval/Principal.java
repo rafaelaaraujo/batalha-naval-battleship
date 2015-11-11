@@ -30,16 +30,15 @@ public class Principal {
 
 	public static void main(String[] args) {
 		try {
-
 			ip = JOptionPane.showInputDialog("Informe o ip");
 			
 			if (ip == null || ip.equals("")) {
-				showMessage("É preciso que informe o ip para continuar");
+				JOptionPane.showMessageDialog(null, "É preciso que informe o ip para continuar");
 			} else {
 				inicializarServidor();
 
 				if (Controller.jogadorId == null) {
-					showMessage("Já existe um jogo em andamento espere ele terminar");
+					JOptionPane.showMessageDialog(null,"Já existe um jogo em andamento espere ele terminar");
 				} else {
 
 					if (Controller.servidor.oponenteConectado()) {
@@ -51,7 +50,7 @@ public class Principal {
 			}
 
 		} catch (Exception e1){
-			showMessage("Erro ao conectar no servidor. Verifique o ip e a sua conexao a internet.");
+			JOptionPane.showMessageDialog(null,"Erro ao conectar no servidor. Verifique o ip e a sua conexao a internet.");
 		}
 
 	}
@@ -110,24 +109,20 @@ public class Principal {
 	private static void mostrarAlertaAguardandoOponente() {
 		if (frame == null) {
 			JPanel panel = new JPanel();
-			panel.setMinimumSize(new Dimension(200, 200));
+			panel.setSize(new Dimension(400, 400));
 
 			JTextField txt = new JTextField();
 			txt.setText("Oponente ainda não conectou");
 			txt.setEditable(false);
 
 			panel.add(txt);
-			frame = new JFrame("JOptionPane showMessageDialog component example");
+			frame = new JFrame("Batalha naval");
 			frame.add(panel);
 			frame.pack();
 			frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 			frame.setVisible(true);
 		}
 
-	}
-	
-	private static void showMessage(String mensagem){
-		JOptionPane.showMessageDialog(null, mensagem);
 	}
 
 }

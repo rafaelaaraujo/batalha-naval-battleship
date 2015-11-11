@@ -5,7 +5,6 @@ import java.rmi.RemoteException;
 import telas.TelaPrincipal;
 import batalhanaval.Controller;
 import enuns.Estado;
-import exception.ErroServidorException;
 
 public class MessageListenerImpl implements MessageListener {
 

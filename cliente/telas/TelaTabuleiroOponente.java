@@ -7,7 +7,9 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
 import java.io.IOException;
+import java.rmi.RemoteException;
 
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import jogo.Jogador;
@@ -15,15 +17,13 @@ import batalhanaval.Controller;
 import batalhanaval.TratarImagens;
 import enuns.Estado;
 import eventos.TratadorMouseOponente;
-import exception.ErroServidorException;
 import navios.Navio;
 
 @SuppressWarnings("serial")
 public class TelaTabuleiroOponente extends JPanel {
 
-	public  final int DIM_QUADRADO = 30;
-	public  final int TAM_MAPA = 15;
-
+	public final int DIM_QUADRADO = 30;
+	public final int TAM_MAPA = 15;
 
 	public TelaPrincipal principal;
 	private TratarImagens tratarImagens = new TratarImagens();
@@ -40,7 +40,8 @@ public class TelaTabuleiroOponente extends JPanel {
 		try {
 			fundo = tratarImagens.getImagemMar(1);
 
-			dim = new Dimension(TAM_MAPA* DIM_QUADRADO, TAM_MAPA* DIM_QUADRADO);
+			dim = new Dimension(TAM_MAPA * DIM_QUADRADO, TAM_MAPA
+					* DIM_QUADRADO);
 			setPreferredSize(dim);
 
 			// Quadrado onde o ponteiro está
@@ -48,8 +49,9 @@ public class TelaTabuleiroOponente extends JPanel {
 
 			tm = new TratadorMouseOponente(this);
 			addMouseListeners();
-		/*} catch (ErroServidorException e) {
-			e.mostrarAlerta();*/
+			/*
+			 * } catch (ErroServidorException e) { e.mostrarAlerta();
+			 */
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -62,8 +64,8 @@ public class TelaTabuleiroOponente extends JPanel {
 			desenhaTabuleiro(g);
 			desenhaFrota(g);
 			desenhaTiros(g);
-		} catch (ErroServidorException e) {
-			e.mostrarAlerta();
+		} catch (RemoteException e) {
+			Controller.mostrarAlerta();
 		}
 
 	}
@@ -90,7 +92,7 @@ public class TelaTabuleiroOponente extends JPanel {
 		}
 	}
 
-	private void desenhaFrota(Graphics g) throws ErroServidorException {
+	private void desenhaFrota(Graphics g) throws RemoteException {
 		for (Navio navio : Controller.getOponente().getFrota()) {
 			if (navio.getPosicao() != null)
 				if (navio.estaDestruido())
@@ -102,7 +104,7 @@ public class TelaTabuleiroOponente extends JPanel {
 		}
 	}
 
-	private void desenhaTabuleiro(Graphics g) throws ErroServidorException {
+	private void desenhaTabuleiro(Graphics g) throws RemoteException {
 
 		g.drawImage(fundo, 0, 0, null);
 		g.setColor(Color.BLUE);
@@ -110,18 +112,20 @@ public class TelaTabuleiroOponente extends JPanel {
 
 		for (int i = 1; i < 21; i++) {
 
-			g.drawLine(i * 30, 0, i * 30, TAM_MAPA* DIM_QUADRADO);
+			g.drawLine(i * 30, 0, i * 30, TAM_MAPA * DIM_QUADRADO);
 			// horizontal
-			g.drawLine(0, i * 30, TAM_MAPA* DIM_QUADRADO, i * 30); // linha vertical
+			g.drawLine(0, i * 30, TAM_MAPA * DIM_QUADRADO, i * 30); // linha
+																	// vertical
 		}
 
 	}
 
-	public int atira(int coluna, int linha) throws ErroServidorException {
+	public int atira(int coluna, int linha) throws RemoteException {
 		int valorAtual = Controller.getOponente().getTabuleiro()
 				.getValorPosicao(coluna, linha);
 
-		if (valorAtual >= 1) { // quando posição é atingida seu valor fica negativo
+		if (valorAtual >= 1) { // quando posição é atingida seu valor fica
+								// negativo
 			Controller.atirarNoOponente(coluna, linha);
 
 			if (valorAtual > 1
@@ -142,15 +146,24 @@ public class TelaTabuleiroOponente extends JPanel {
 	 * Destroi um navio do jogador, subtraindo id de seu total de
 	 * identificadores de navios.
 	 * 
-	 * @param id O identificador do navio destruído.
+	 * @param id
+	 *            O identificador do navio destruído.
 	 */
 	private void destroirNavio(int id) {
-		Jogador oponente = Controller.getOponente();
-		Navio navio = oponente.getNavio(id);
-		principal.mostraEvento("Você afundou o " + navio.getNome().toUpperCase() + " do adversário!");
+		Jogador oponente;
+		try {
+			oponente = Controller.getOponente();
 
-		if (!oponente.navioRestante()) {
-			Controller.setEstadoJogo(Estado.JOGO_TERMINADO);
+			Navio navio = oponente.getNavio(id);
+			principal.mostraEvento("Você afundou o "
+					+ navio.getNome().toUpperCase() + " do adversário!");
+
+			if (!oponente.navioRestante()) {
+				Controller.setEstadoJogo(Estado.JOGO_TERMINADO);
+			}
+
+		} catch (RemoteException e) {
+			Controller.mostrarAlerta();
 		}
 	}
 
@@ -160,19 +173,19 @@ public class TelaTabuleiroOponente extends JPanel {
 		try {
 			int res = atira(pos.x, pos.y);
 			repaint();
-			
-			if(res == 0){
+
+			if (res == 0) {
 				principal.mostraEvento("Está posição já foi atingida!!!");
 				return;
-				
-			}else if (res == 1) {
+
+			} else if (res == 1) {
 				Controller.setEstadoJogo(Controller.getIdOponente());
 
 			} else if (res > 1) {
 				principal.mostraEventos();
 			}
-		} catch (ErroServidorException ex) {
-			ex.mostrarAlerta();
+		} catch (RemoteException ex) {
+			Controller.mostrarAlerta();
 		}
 	}
 

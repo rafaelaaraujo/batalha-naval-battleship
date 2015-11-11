@@ -8,7 +8,6 @@ import java.rmi.RemoteException;
 
 import batalhanaval.Controller;
 import enuns.Estado;
-import exception.ErroServidorException;
 import telas.TelaTabuleiroOponente;
 
 public class TratadorMouseOponente implements MouseListener, MouseMotionListener {
@@ -20,10 +19,14 @@ public class TratadorMouseOponente implements MouseListener, MouseMotionListener
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-		if (Controller.getEstadoJogo() == Controller.jogadorId) {
-			painel.adicionarJogada();
-		}else if(Controller.getEstadoJogo() != Estado.JOGO_TERMINADO  && Controller.getEstadoJogo() != Estado.OPONENTE_DESCONECTADO ){
-			painel.principal.mostraEvento("Aguarde sua vez de jogar");
+		try {
+			if (Controller.getEstadoJogo() == Controller.jogadorId) {
+				painel.adicionarJogada();
+			}else if(Controller.getEstadoJogo() != Estado.JOGO_TERMINADO  && Controller.getEstadoJogo() != Estado.OPONENTE_DESCONECTADO ){
+				painel.principal.mostraEvento("Aguarde sua vez de jogar");
+			}
+		} catch (RemoteException e1) {
+			Controller.mostrarAlerta();
 		}
 	}
 
